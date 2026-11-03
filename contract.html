@@ -968,12 +968,23 @@
 
         // 계약서 부분만 그림으로 뜬다 (지우기 버튼·안내 문구는 빼고)
         // mask: 주민번호 뒷자리를 첫 자리만 남기고 가린다 (이미지 저장·공유용). 대표 제출용은 다 보이게
+        // 휴대폰 화면 폭 그대로 뜨면 A4로 늘어나 글자가 커지고 10장 넘게 나온다
+        // → 항상 PC 폭(860px) 레이아웃으로 그린다. 서명은 그린 크기 그대로 둬서 늘어나지 않게
+        const CAPTURE_W = 860;
         async function capture(mask) {
             return html2canvas(document.querySelector('.contract-container'), {
                 scale: 2,
                 backgroundColor: '#ffffff',
+                windowWidth: CAPTURE_W + 80,
                 ignoreElements: el => el.classList && (el.classList.contains('btn-clear') || el.classList.contains('canvas-hint')),
                 onclone: doc => {
+                    const box = doc.querySelector('.contract-container');
+                    box.style.width = CAPTURE_W + 'px';
+                    box.style.maxWidth = CAPTURE_W + 'px';
+                    box.style.boxShadow = 'none';
+                    const sig = doc.getElementById('sig-canvas');
+                    sig.style.width = canvas.width + 'px';
+                    sig.style.height = canvas.height + 'px';
                     if (!mask) return;
                     const back = doc.querySelector('.rrn-container input:last-of-type');
                     if (back && back.value) back.value = back.value.slice(0, 1) + '******';
