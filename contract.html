@@ -687,6 +687,7 @@
                         <span>임금 지급 방식</span>
                         <div class="pay-toggle-container">
                             <button type="button" class="pay-toggle-btn active" id="btn-month" onclick="selectPayType('month')">월 급</button>
+                            <button type="button" class="pay-toggle-btn" id="btn-day" onclick="selectPayType('day')">일 급</button>
                             <button type="button" class="pay-toggle-btn" id="btn-week" onclick="selectPayType('week')">주 급</button>
                         </div>
                     </div>
@@ -698,6 +699,16 @@
                         </div>
                         <div style="margin-bottom: 12px;">
                             지급일 : 매월 <input type="text" class="inline-input" style="width: 45px;" placeholder="25"> 일 (계좌 이체 지급)
+                        </div>
+                    </div>
+
+                    <!-- 일급 뷰: 일당으로 계산해 한 달 치를 모아 월 1회 지급 -->
+                    <div id="section-day" class="pay-conditional-section">
+                        <div style="margin-bottom: 12px;">
+                            <span>일 급 (1일)</span> : <input type="text" style="width: 110px; text-align: right;" placeholder="100,000"> 원 (세전)
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            지급일 : 매월 <input type="text" class="inline-input" style="width: 45px;" placeholder="10"> 일 (전월 근무일수 × 일급, 계좌 이체 지급)
                         </div>
                     </div>
 
@@ -844,22 +855,10 @@
         let payType = 'month';
         function selectPayType(type) {
             payType = type;
-            const btnMonth = document.getElementById('btn-month');
-            const btnWeek = document.getElementById('btn-week');
-            const secMonth = document.getElementById('section-month');
-            const secWeek = document.getElementById('section-week');
-
-            if (type === 'month') {
-                btnMonth.classList.add('active');
-                btnWeek.classList.remove('active');
-                secMonth.classList.add('active');
-                secWeek.classList.remove('active');
-            } else if (type === 'week') {
-                btnMonth.classList.remove('active');
-                btnWeek.classList.add('active');
-                secMonth.classList.remove('active');
-                secWeek.classList.add('active');
-            }
+            ['month', 'day', 'week'].forEach(t => {
+                document.getElementById('btn-' + t).classList.toggle('active', t === type);
+                document.getElementById('section-' + t).classList.toggle('active', t === type);
+            });
         }
 
         // 서명 패드
@@ -1112,7 +1111,7 @@
                 const pay = document.querySelector('#section-' + payType + ' input');
                 if (!place.value) { say('근무 장소를 골라주세요', 'err'); place.focus(); return; }
                 if (!start.value) { say('계약 시작일을 적어주세요', 'err'); start.focus(); return; }
-                if (!pay.value.trim()) { say((payType === 'month' ? '월 급여액' : '시급') + '을 적어주세요', 'err'); pay.focus(); return; }
+                if (!pay.value.trim()) { say({ month: '월 급여액', day: '일급', week: '시급' }[payType] + '을 적어주세요', 'err'); pay.focus(); return; }
                 const url = location.href.split('#')[0] + '#d='
                     + encode({ p: payType, f: termFields.map(el => el.value), n: nameInput.value.trim() });
                 document.getElementById('link-text').value = url;
