@@ -474,6 +474,48 @@
         }
         .send-msg.ok { color: #12B76A; }
         .send-msg.err { color: #D92D20; }
+
+        /* --- 2단계 작성: 대표가 근로조건 → 근로자가 나머지 --- */
+        .step-banner {
+            width: 100%;
+            max-width: 900px;
+            background: #FFF7E6;
+            border: 1px solid #F5C26B;
+            color: #7A4B00;
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            word-break: keep-all;
+        }
+        .step-banner b { color: #B54708; }
+        .btn-send-emp {
+            background-color: #F79009;
+        }
+        .link-box {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 10px;
+        }
+        .link-box textarea {
+            width: 100%;
+            min-height: 70px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .locked {
+            background-color: #F2F4F7 !important;
+            color: #101828 !important;
+            -webkit-text-fill-color: #101828;
+            opacity: 1 !important;
+            pointer-events: none;
+        }
+        .emp-only-note {
+            font-size: 12px;
+            color: #98A2B3;
+        }
         .disclaimer-box {
             width: 100%;
             max-width: 900px;
@@ -559,7 +601,7 @@
             .rrn-secret {
                 border: 1px solid #777 !important;
             }
-            .control-panel, .disclaimer-box, .btn-clear, .canvas-hint, .send-msg {
+            .control-panel, .disclaimer-box, .btn-clear, .canvas-hint, .send-msg, .step-banner, .link-box {
                 display: none !important;
             }
             .pay-conditional-section {
@@ -578,6 +620,8 @@
             🖨️ 계약서 출력 / PDF 저장
         </button>
     </div>
+
+    <div class="step-banner" id="step-banner"></div>
 
     <div class="contract-container">
         <div class="top-deco-line"></div>
@@ -670,9 +714,9 @@
                     <!-- 입금 계좌 공통 -->
                     <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px; flex-wrap: wrap;">
                         <span>입금 계좌 :</span>
-                        <input type="text" style="width: 80px;" placeholder="은행명">
-                        <input type="text" style="width: 150px;" placeholder="계좌번호">
-                        <input type="text" style="width: 70px;" placeholder="예금주">
+                        <input type="text" class="emp" style="width: 80px;" placeholder="은행명">
+                        <input type="text" class="emp" style="width: 150px;" placeholder="계좌번호">
+                        <input type="text" class="emp" style="width: 70px;" placeholder="예금주">
                     </div>
                 </div>
             </div>
@@ -781,10 +825,15 @@
 
     <!-- 작성·서명 후 저장 / 제출 -->
     <div class="control-panel send-panel">
+        <button type="button" class="btn-print btn-send-emp" id="btn-send-emp">📨 근로자에게 보내기 (근로조건 작성 완료)</button>
         <button type="button" class="btn-print" id="btn-share">📲 계약서 저장·보내기 (이미지, 주민번호 뒷자리 가림)</button>
         <button type="button" class="btn-print btn-submit" id="btn-submit">📤 대표에게 제출</button>
     </div>
     <div class="send-msg" id="send-msg"></div>
+    <div class="link-box" id="link-box">
+        <div class="emp-only-note">아래 링크를 복사해서 근로자에게 카톡·문자로 보내주세요</div>
+        <textarea id="link-text" readonly onclick="this.select()"></textarea>
+    </div>
 
     <div class="disclaimer-box">
         본 근로계약서 양식은 기본 프레임워크를 제공하며, 실제 운영 방식에 맞추어 세부 조항(임금 구조 등)을 검토하신 후 활용하시기 바랍니다.
@@ -792,7 +841,9 @@
 
     <script>
         // 임금 토글
+        let payType = 'month';
         function selectPayType(type) {
+            payType = type;
             const btnMonth = document.getElementById('btn-month');
             const btnWeek = document.getElementById('btn-week');
             const secMonth = document.getElementById('section-month');
@@ -907,6 +958,8 @@
         function ready() {
             const name = nameInput.value.trim();
             if (!name) { say('근로자 성명을 적어주세요', 'err'); nameInput.focus(); return null; }
+            const empty = [...document.querySelectorAll('.emp, .rrn-container input')].find(el => !el.value.trim());
+            if (empty) { say('입금 계좌와 주민번호를 적어주세요', 'err'); empty.focus(); return null; }
             if (!signed) { say('서명을 해주세요', 'err'); canvas.scrollIntoView({ block: 'center' }); return null; }
             return name;
         }
@@ -989,6 +1042,103 @@
                 say('✅ 제출했어요. 대표님께 전달됐어요', 'ok');
             });
         });
+
+        // 2단계 작성
+        // 1단계(주소에 #d= 없음) = 대표: 근로조건(근무지~임금·계약일)을 채우고 링크로 보낸다
+        // 2단계(#d= 있음) = 근로자: 대표가 적은 칸은 잠기고, 계좌·인적사항·서명을 채워 제출한다
+        // 근로조건은 주소 # 뒤에 담겨 서버로는 가지 않는다 (주민번호·계좌는 링크에 안 담음)
+        const termFields = [...document.querySelectorAll('.contract-body input, .contract-body select, .contract-body textarea')]
+            .filter(el => !el.classList.contains('emp'));
+        const empFields = [...document.querySelectorAll('.emp, .rrn-container input, .sig-table-box input')]
+            .filter(el => el !== nameInput);
+        const banner = document.getElementById('step-banner');
+        const sendEmpBtn = document.getElementById('btn-send-emp');
+
+        function encode(obj) {
+            let s = '';
+            new TextEncoder().encode(JSON.stringify(obj)).forEach(c => s += String.fromCharCode(c));
+            return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function decode(str) {
+            const s = atob(str.replace(/-/g, '+').replace(/_/g, '/'));
+            return JSON.parse(new TextDecoder().decode(Uint8Array.from(s, c => c.charCodeAt(0))));
+        }
+
+        function lock(el) {
+            el.readOnly = true;
+            el.tabIndex = -1;
+            el.classList.add('locked');
+            if (!el.value) el.placeholder = '';
+        }
+
+        const hashData = (location.hash.match(/[#&]d=([^&]+)/) || [])[1];
+
+        if (hashData) {
+            // 근로자 단계
+            sendEmpBtn.style.display = 'none';
+            try {
+                const d = decode(hashData);
+                if (d.f.length !== termFields.length) throw new Error('양식이 바뀌었어요');
+                termFields.forEach((el, i) => { el.value = d.f[i]; lock(el); });
+                selectPayType(d.p);
+                document.querySelector('.pay-toggle-container').style.pointerEvents = 'none';
+                if (d.n) nameInput.value = d.n;
+                banner.innerHTML = '<b>근로자 작성</b> 대표님이 적은 근로조건(회색 칸)을 확인해 주세요. '
+                    + '<b>입금 계좌, 성명·주민번호·연락처·주소</b>를 적고 서명한 뒤 맨 아래 <b>대표에게 제출</b>을 눌러주세요.';
+            } catch (err) {
+                banner.innerHTML = '<b>링크가 잘못됐어요.</b> 대표님께 링크를 다시 받아주세요.';
+                document.querySelector('.send-panel').style.display = 'none';
+            }
+        } else {
+            // 대표 단계
+            document.getElementById('btn-share').style.display = 'none';
+            document.getElementById('btn-submit').style.display = 'none';
+            empFields.forEach(lock);
+            document.querySelector('.canvas-container').style.opacity = '0.4';
+            canvas.style.pointerEvents = 'none';
+            clearBtn.style.display = 'none';
+            hint.textContent = '근로자가 서명합니다';
+            const contractDate = document.querySelector('.conclusion-date input');
+            const t = new Date(), p = n => String(n).padStart(2, '0');
+            contractDate.value = t.getFullYear() + '-' + p(t.getMonth() + 1) + '-' + p(t.getDate());
+            banner.innerHTML = '<b>대표 작성</b> 근무지·업무·계약기간·근무시간·임금·계약일을 채우고, '
+                + '근로자 성명(선택)을 적은 뒤 맨 아래 <b>근로자에게 보내기</b>를 누르세요. '
+                + '계좌·주민번호·연락처·주소·서명은 근로자가 작성합니다.';
+
+            sendEmpBtn.addEventListener('click', async function () {
+                const place = document.querySelector('.contract-body select');
+                const start = document.querySelector('.contract-body input[type="date"]');
+                const pay = document.querySelector('#section-' + payType + ' input');
+                if (!place.value) { say('근무 장소를 골라주세요', 'err'); place.focus(); return; }
+                if (!start.value) { say('계약 시작일을 적어주세요', 'err'); start.focus(); return; }
+                if (!pay.value.trim()) { say((payType === 'month' ? '월 급여액' : '시급') + '을 적어주세요', 'err'); pay.focus(); return; }
+                const url = location.href.split('#')[0] + '#d='
+                    + encode({ p: payType, f: termFields.map(el => el.value), n: nameInput.value.trim() });
+                document.getElementById('link-text').value = url;
+                document.getElementById('link-box').style.display = 'block';
+                const who = nameInput.value.trim();
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: '워시앤뉴 근로계약서',
+                            text: (who ? who + '님, ' : '') + '근로계약서 작성 부탁드립니다. 링크를 열어 계좌·인적사항을 적고 서명한 뒤 "대표에게 제출"을 눌러주세요.',
+                            url: url
+                        });
+                        say('✅ 보냈어요. 근로자가 제출하면 텔레그램으로 알려드려요', 'ok');
+                        return;
+                    } catch (err) {
+                        if (err.name === 'AbortError') { say(''); return; }
+                    }
+                }
+                try {
+                    await navigator.clipboard.writeText(url);
+                    say('✅ 링크를 복사했어요. 근로자에게 붙여넣어 보내주세요', 'ok');
+                } catch (err) {
+                    say('아래 링크를 길게 눌러 복사해 보내주세요', 'ok');
+                }
+            });
+        }
     </script>
 </body>
 </html>
