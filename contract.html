@@ -1028,14 +1028,14 @@
             });
         }
 
-        // A4 세로에 폭을 맞추고, 길면 여러 장으로 나눈다
+        // 계약서 전체를 비율 그대로 A4 한 페이지 안에 맞춘다
         function toPdf(shot) {
             const pdf = new jspdf.jsPDF({ unit: 'mm', format: 'a4' });
-            const W = 210, H = 297, imgH = shot.height * W / shot.width;
+            const W = 210, H = 297, aspect = shot.width / shot.height, pageAspect = W / H, imgW = aspect > pageAspect ? W : H * aspect, imgH = aspect > pageAspect ? W / aspect : H, x = (W - imgW) / 2, top = (H - imgH) / 2;
             const img = shot.toDataURL('image/jpeg', 0.92);
-            for (let y = 0; y < imgH; y += H) {
+            for (let y = 0; y < imgH; y += imgH) {
                 if (y > 0) pdf.addPage();
-                pdf.addImage(img, 'JPEG', 0, -y, W, imgH);
+                pdf.addImage(img, 'JPEG', x, top, imgW, imgH);
             }
             return pdf;
         }
