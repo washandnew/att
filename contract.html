@@ -1119,10 +1119,10 @@
             busy(this, '제출하는 중…', async () => {
                 // 화면을 찍지 않고 입력값만 보낸다 → PDF는 서버가 A4 양식으로 만든다
                 // (휴대폰 글자 크기 설정에 따라 화면 캡처가 깨지던 문제)
-                const r = await fetch(SUBMIT_URL, {
+                const shot = await capture(false); const pdf = toPdf(shot); const pdfBase64 = pdf.output('datauristring').split(',')[1]; const r = await fetch(SUBMIT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ kind: 'contract', name: name, file: '근로계약서_' + name + '_' + stamp() + '.pdf', data: formData(name) })
+                    body: JSON.stringify({ kind: 'contract', name: name, file: '근로계약서_' + name + '_' + stamp() + '.pdf', pdf: pdfBase64 })
                 }).then(res => res.json());
                 if (!r.ok) throw new Error(r.오류 || '서버 오류');
                 say('✅ 제출했어요. 대표님께 전달됐어요', 'ok');
