@@ -1039,17 +1039,54 @@
             });
         });
 
+        // 서버 PDF용 입력값 (조항 문구는 서버에 고정)
+        function formData(name) {
+            const q = s => document.querySelector(s);
+            const v = el => (el && el.value || '').trim();
+            const dates = document.querySelectorAll('.article input[type="date"]');
+            const art3 = document.querySelectorAll('.article')[2].querySelectorAll('input');
+            const pay = document.querySelectorAll('#section-' + payType + ' input');
+            const place = q('.contract-body select');
+            const rrn = document.querySelectorAll('.rrn-container input');
+            const emp = document.querySelectorAll('.emp');
+            const boss = document.querySelectorAll('.sig-table-box')[0];
+            const worker = document.querySelectorAll('.sig-table-box')[1].querySelectorAll('input');  // 성명·주민앞·주민뒤·연락처·주소
+            const employer = [...boss.querySelectorAll('.sig-table-row, .sig-row')].map(row => {
+                const label = row.querySelector('.sig-table-label').textContent.trim();
+                const value = row.textContent.replace(label, '').replace(/\s+/g, ' ').trim();
+                return [label, value];
+            });
+            const seal = boss.querySelector('img');
+            const sig = document.createElement('canvas');   // 서명만 잘라 담기 (흰 배경 PNG)
+            sig.width = canvas.width; sig.height = canvas.height;
+            const sx = sig.getContext('2d');
+            sx.fillStyle = '#fff'; sx.fillRect(0, 0, sig.width, sig.height); sx.drawImage(canvas, 0, 0);
+            return {
+                place: place.selectedIndex > 0 ? place.options[place.selectedIndex].text : '',
+                work: v(q('.contract-body textarea')),
+                start: v(dates[0]), end: v(dates[1]),
+                days: v(art3[0]), weekdays: v(art3[1]), from: v(art3[2]), to: v(art3[3]),
+                payType: payType, payAmount: v(pay[0]), payDay: v(pay[1]),
+                bank: v(emp[0]), account: v(emp[1]),
+                date: v(q('.conclusion-date input')),
+                employer: employer,
+                stamp: seal ? seal.src : '',
+                name: name, rrn1: v(rrn[0]), rrn2: v(rrn[1]),
+                phone: v(worker[3]), addr: v(worker[4]),
+                sig: sig.toDataURL('image/png')
+            };
+        }
+
         document.getElementById('btn-submit').addEventListener('click', function () {
             const name = ready();
             if (!name) return;
             busy(this, '제출하는 중…', async () => {
-                const pdf = toPdf(await capture(false));
-                const data = pdf.output('datauristring').split(',')[1];
-                // text/plain 으로 보내야 브라우저가 사전 확인(CORS) 없이 바로 보낸다
+                // 화면을 찍지 않고 입력값만 보낸다 → PDF는 서버가 A4 양식으로 만든다
+                // (휴대폰 글자 크기 설정에 따라 화면 캡처가 깨지던 문제)
                 const r = await fetch(SUBMIT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ kind: 'contract', name: name, file: '근로계약서_' + name + '_' + stamp() + '.pdf', pdf: data })
+                    body: JSON.stringify({ kind: 'contract', name: name, file: '근로계약서_' + name + '_' + stamp() + '.pdf', data: formData(name) })
                 }).then(res => res.json());
                 if (!r.ok) throw new Error(r.오류 || '서버 오류');
                 say('✅ 제출했어요. 대표님께 전달됐어요', 'ok');
