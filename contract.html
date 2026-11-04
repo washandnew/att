@@ -566,21 +566,57 @@
 
         /* --- 인쇄 스타일 시트 (A4 최적화) --- */
         @media print {
+            /* A4 인쇄/PDF: 화면용 900px 레이아웃이 인쇄 배율에 영향을 주지 않도록
+               페이지 여백 안에서 계약서 폭과 글자 크기를 인쇄 단위로 고정합니다. */
             @page {
-                size: A4;
-                margin: 15mm 15mm 10mm 15mm;
+                size: A4 portrait;
+                margin: 12mm;
             }
-            body {
-                background-color: #fff;
-                padding: 0;
-                margin: 0;
+            html, body {
+                width: auto !important;
+                min-width: 0 !important;
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                color: #252830;
+                font-size: 10pt;
+                -webkit-text-size-adjust: 100%;
             }
             .contract-container {
-                box-shadow: none;
-                padding: 0;
-                width: 100%;
-                max-width: 100%;
+                box-shadow: none !important;
+                border-radius: 0;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+                max-width: none !important;
+                overflow: visible !important;
             }
+            .top-deco-line { display: none; }
+            header { margin-top: 0; margin-bottom: 5mm; }
+            .main-title { font-size: 18pt; }
+            .sub-title { font-size: 9pt; }
+            .preamble { font-size: 9pt; margin-bottom: 5mm; padding: 3mm 4mm; }
+            .article { margin-bottom: 5mm; break-inside: avoid-page; page-break-inside: avoid; }
+            .article-title { font-size: 9pt; padding: 2mm 3mm; margin-bottom: 2mm; }
+            .article-content { font-size: 9pt; line-height: 1.55; }
+            .article-content > div { margin-bottom: 2mm; }
+            .legal-note { font-size: 7.5pt; }
+            .conclusion-date { font-size: 9pt; margin: 6mm 0 4mm; }
+            .signature-section {
+                flex-direction: row !important;
+                gap: 4mm;
+                break-inside: avoid-page;
+                page-break-inside: avoid;
+            }
+            .sig-table-box { min-width: 0; break-inside: avoid-page; page-break-inside: avoid; }
+            .sig-table-header { font-size: 9pt; padding: 2mm; }
+            .sig-table-row { min-height: 9mm; }
+            .sig-table-label { width: 20mm; font-size: 8pt; padding-left: 2mm; }
+            .sig-table-value { font-size: 8.5pt; padding: 1mm 2mm; }
+            .brand-badge-zone, .canvas-container { height: 22mm; margin: 2mm; }
+            footer { margin-top: 5mm; padding-top: 3mm; }
+            .footer-note { font-size: 8pt; }
             .signature-section {
                 flex-direction: row !important;
             }
