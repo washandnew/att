@@ -60,6 +60,14 @@
   <div id="loading" class="center">기관 정보를 불러오는 중…</div>
   <div id="bad" class="center" hidden></div>
 
+  <form id="pinBox" class="card" hidden novalidate>
+    <h2>원 번호를 입력해 주세요</h2>
+    <p class="hint" style="margin:0 0 6px">어린이집·유치원 선생님께 받은 4자리 숫자예요.</p>
+    <input id="pin" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="예: 1234" style="font-size:26px;letter-spacing:10px;text-align:center">
+    <p class="err" id="pinErr" role="alert"></p>
+    <button type="submit" class="primary" id="pinGo">확인</button>
+  </form>
+
   <form id="f" hidden novalidate>
     <div class="card">
       <div class="org" id="orgName"></div>
@@ -164,7 +172,7 @@ const API = 'https://script.google.com/macros/s/AKfycby2HTfUxV3aAiVruxL15-8bf_-z
 const BANKS = ['국민은행','신한은행','우리은행','하나은행','농협은행','지역농협','기업은행','SC제일은행','씨티은행','카카오뱅크','토스뱅크','케이뱅크','새마을금고','신협','우체국','수협','부산은행','경남은행','대구은행(iM뱅크)','광주은행','전북은행','제주은행','산림조합','저축은행','기타'];
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
-const code = (params.get('code') || '').trim();
+let code = (params.get('code') || '').trim();
 const TEST = params.get('test') === '1';
 let info = null;
 
@@ -236,9 +244,35 @@ $('bank').onchange = () => { $('bankEtc').hidden = $('bank').value !== '기타';
 function showBad(msg) { $('loading').hidden = true; $('bad').hidden = false; $('bad').textContent = msg; }
 
 if (TEST) fill({ ok: true, org: '시험어린이집', price: Number(params.get('price') || 9900), classes: ['햇살반', '새싹반', '꽃잎반'] });
-else if (!code) showBad('기관 QR코드로 다시 열어 주세요.');
+else if (!code) { $('loading').hidden = true; $('pinBox').hidden = false; $('pin').focus(); }
 else fetch(API + '?apply=' + encodeURIComponent(code)).then(r => r.json()).then(d => d.ok ? fill(d) : showBad(d.error || '기관 정보를 찾을 수 없어요. QR코드를 다시 찍어 주세요.'))
   .catch(() => showBad('인터넷 연결을 확인하고 다시 열어 주세요.'));
+
+// ---------- 원 번호 (QR 없이 카톡 채널로 들어온 경우) ----------
+// 이 기기에서 5번 틀리면 10분 동안 막음. 서버도 전체 실패 횟수로 따로 막음.
+function pinLock(set) {
+  try {
+    const s = JSON.parse(localStorage.getItem('pinTry') || '{"n":0,"t":0}');
+    if (Date.now() - s.t > 600000) { s.n = 0; }
+    if (set === 'fail') { s.n++; s.t = Date.now(); localStorage.setItem('pinTry', JSON.stringify(s)); }
+    if (set === 'ok') localStorage.removeItem('pinTry');
+    return s.n >= 5 ? Math.ceil((600000 - (Date.now() - s.t)) / 60000) : 0;
+  } catch (e) { return 0; }
+}
+$('pinBox').addEventListener('submit', async e => {
+  e.preventDefault();
+  const p = digits($('pin').value);
+  const wait = pinLock();
+  if (wait) { $('pinErr').textContent = wait + '분 뒤에 다시 시도해 주세요.'; return; }
+  if (p.length !== 4) { $('pinErr').textContent = '4자리 숫자를 입력해 주세요.'; return; }
+  $('pinGo').disabled = true; $('pinErr').textContent = '';
+  try {
+    const d = await (await fetch(API + '?pin=' + p)).json();
+    if (!d.ok) { if (!d.locked) pinLock('fail'); $('pinErr').textContent = d.error || '원 번호가 맞지 않아요.'; }
+    else { pinLock('ok'); code = d.code; $('pinBox').hidden = true; fill(d); }
+  } catch (err) { $('pinErr').textContent = '인터넷 연결을 확인하고 다시 눌러 주세요.'; }
+  $('pinGo').disabled = false;
+});
 
 // ---------- 입력 확인 ----------
 const digits = s => String(s || '').replace(/[^0-9]/g, '');
