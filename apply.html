@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>식판생각 자동이체 신청</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root { --sky:#5bbcf2; --sky-d:#1f8fd0; --sky-p:#eaf6fd; --ink:#1d2a33; --muted:#6a7884; --line:#d6e3ec; --red:#d33a2c; --bg:#f5f9fc; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Noto Sans KR",-apple-system,"Malgun Gothic",sans-serif; background:var(--bg); color:var(--ink); font-size:16px; line-height:1.5; }
+  header { background:var(--sky); color:#fff; padding:18px 16px 16px; text-align:center; }
+  header h1 { margin:0; font-size:21px; }
+  header p { margin:4px 0 0; font-size:14px; opacity:.95; }
+  main { max-width:560px; margin:0 auto; padding:14px 16px 60px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px; }
+  .card h2 { margin:0 0 10px; font-size:16px; color:var(--sky-d); }
+  .org { font-size:19px; font-weight:700; }
+  .price { color:var(--muted); font-size:14px; }
+  label { display:block; font-size:14px; font-weight:500; margin:12px 0 4px; }
+  label small { color:var(--muted); font-weight:400; }
+  input, select { width:100%; font:inherit; font-size:17px; padding:11px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); }
+  input:focus, select:focus { outline:2px solid var(--sky); border-color:var(--sky); }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .hint { font-size:13px; color:var(--muted); margin-top:4px; }
+  .warn { font-size:13px; color:var(--red); margin-top:4px; }
+  .terms { font-size:14px; color:var(--ink); padding-left:18px; margin:0; }
+  .terms li { margin:3px 0; }
+  .terms b { color:var(--red); }
+  .check { display:flex; gap:10px; align-items:flex-start; margin:10px 0; font-size:15px; }
+  .check input { width:22px; height:22px; margin:1px 0 0; flex:none; }
+  details { margin-top:10px; font-size:14px; }
+  details img { width:100%; border:1px solid var(--line); border-radius:6px; margin-top:8px; }
+  .pad-wrap { border:1.5px dashed var(--sky); border-radius:10px; background:#fff; position:relative; }
+  .pad { display:block; width:100%; height:170px; touch-action:none; }
+  .pad-hint { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#b6c7d3; pointer-events:none; font-size:15px; }
+  .pad-tools { display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:13px; color:var(--muted); }
+  button { font:inherit; cursor:pointer; }
+  .ghost { background:none; border:1px solid var(--line); border-radius:8px; padding:5px 12px; color:var(--ink); font-size:14px; }
+  .primary { width:100%; background:var(--sky-d); color:#fff; border:0; border-radius:12px; padding:15px; font-size:18px; font-weight:700; }
+  .primary:disabled { background:#9fb7c6; }
+  .err { color:var(--red); font-size:14px; margin:8px 0 0; min-height:1em; }
+  #preview img { width:100%; border:1px solid var(--line); border-radius:6px; }
+  .done { text-align:center; padding:30px 10px; }
+  .done h2 { color:var(--sky-d); font-size:22px; }
+  .center { text-align:center; color:var(--muted); padding:40px 0; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>식판생각 자동이체 신청</h1>
+  <p>종이 신청서와 같은 내용이에요. 3분이면 끝나요.</p>
+</header>
+<main>
+  <div id="loading" class="center">기관 정보를 불러오는 중…</div>
+  <div id="bad" class="center" hidden></div>
+
+  <form id="f" hidden novalidate>
+    <div class="card">
+      <div class="org" id="orgName"></div>
+      <div class="price" id="orgPrice"></div>
+    </div>
+
+    <div class="card">
+      <h2>아이 정보</h2>
+      <label for="cls">반</label>
+      <select id="cls"></select>
+      <input id="clsEtc" placeholder="반 이름을 적어 주세요" hidden>
+      <label for="kid">아이 이름</label>
+      <input id="kid" autocomplete="off">
+      <label for="sibCls">원에 함께 다니는 형제·자매 <small>(있을 때만)</small></label>
+      <div class="row2">
+        <input id="sibCls" placeholder="형제 반">
+        <input id="sibName" placeholder="형제 이름">
+      </div>
+      <div class="hint">형제가 함께 다니면 추가 아이 1명에게 10% 할인돼요. 아이마다 신청서를 따로 작성해 주세요.</div>
+    </div>
+
+    <div class="card">
+      <h2>출금 계좌</h2>
+      <label for="parent">신청인(학부모) 이름</label>
+      <input id="parent" autocomplete="name">
+      <label for="holder">예금주 이름</label>
+      <input id="holder">
+      <label for="phone">연락처</label>
+      <input id="phone" type="tel" inputmode="tel" placeholder="010-0000-0000" autocomplete="tel">
+      <label for="birth">예금주 생년월일 <small>(6자리)</small></label>
+      <input id="birth" inputmode="numeric" maxlength="6" placeholder="예: 900512">
+      <label for="bank">은행</label>
+      <select id="bank"></select>
+      <input id="bankEtc" placeholder="은행 이름" hidden>
+      <label for="acct">계좌번호</label>
+      <input id="acct" inputmode="numeric" placeholder="숫자만 적어도 돼요">
+      <div class="warn">※ 휴대폰 번호로 된 평생계좌는 등록할 수 없어요.</div>
+    </div>
+
+    <div class="card">
+      <h2>이용 안내</h2>
+      <ul class="terms">
+        <li>깨끗이 세척·살균한 식판과 수저를 매일 기관으로 배송하고, 식사 후 당일 수거해요.</li>
+        <li>이용요금은 선불이며 <b>출금일은 매월 5일</b>이에요. 영업일이 아니면 다음 영업일에 출금돼요.</li>
+        <li>퇴소하거나 오래 쉬게 되면 꼭 연락 주세요. 출금을 멈춰 드려요.</li>
+        <li>문의는 카카오톡 채널 ‘식판생각’으로 남겨 주세요.</li>
+      </ul>
+      <details>
+        <summary>신청서 전체 약관 보기</summary>
+        <img id="formImg" alt="식판생각 서비스 이용 및 자동이체 신청서 전체">
+      </details>
+      <label class="check"><input type="checkbox" id="ag1"><span>[필수] 개인정보 수집 및 이용에 동의해요.</span></label>
+      <label class="check"><input type="checkbox" id="ag2"><span>[필수] 개인정보 제3자 제공(나이스페이먼츠, 금융기관)과 금융거래정보 제공에 동의해요.</span></label>
+    </div>
+
+    <div class="card">
+      <h2>서명</h2>
+      <label>신청인(학부모) 서명</label>
+      <div class="pad-wrap"><canvas class="pad" id="pad1"></canvas><div class="pad-hint" id="hint1">여기에 손가락으로 서명해 주세요</div></div>
+      <div class="pad-tools"><span></span><button type="button" class="ghost" data-clear="1">지우기</button></div>
+      <label class="check"><input type="checkbox" id="same" checked><span>신청인과 예금주가 같은 사람이에요</span></label>
+      <div id="pad2box" hidden>
+        <label>예금주 서명</label>
+        <div class="pad-wrap"><canvas class="pad" id="pad2"></canvas><div class="pad-hint" id="hint2">예금주가 서명해 주세요</div></div>
+        <div class="pad-tools"><span></span><button type="button" class="ghost" data-clear="2">지우기</button></div>
+      </div>
+    </div>
+
+    <p class="err" id="err" role="alert"></p>
+    <button type="submit" class="primary" id="go">신청서 확인하기</button>
+  </form>
+
+  <div id="confirm" hidden>
+    <div class="card">
+      <h2>이대로 제출할까요?</h2>
+      <div id="preview"></div>
+      <p class="hint">위와 같이 금융거래정보의 제공, 개인정보 수집·이용·제3자 제공에 동의하며, 자동이체 서비스 약관을 확인하고 자동이체 이용을 신청합니다.</p>
+    </div>
+    <p class="err" id="err2" role="alert"></p>
+    <button type="button" class="primary" id="send">제출하기</button>
+    <p style="text-align:center;margin-top:10px"><button type="button" class="ghost" id="back">고치기</button></p>
+  </div>
+
+  <div id="done" class="done" hidden>
+    <h2>신청이 접수됐어요</h2>
+    <p>등록이 끝나면 은행에서 자동이체 등록 안내 문자가 갈 수 있어요.<br>문의는 카카오톡 채널 ‘식판생각’으로 남겨 주세요.</p>
+  </div>
+</main>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycby2HTfUxV3aAiVruxL15-8bf_-zrGlKUOUlQer_hYtI6-ueEdsNmValzeTYlhOUQ9TM/exec';
+const BANKS = ['국민은행','신한은행','우리은행','하나은행','농협은행','지역농협','기업은행','SC제일은행','씨티은행','카카오뱅크','토스뱅크','케이뱅크','새마을금고','신협','우체국','수협','부산은행','경남은행','대구은행(iM뱅크)','광주은행','전북은행','제주은행','산림조합','저축은행','기타'];
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const code = (params.get('code') || '').trim();
+const TEST = params.get('test') === '1';
+let info = null;
+
+// ---------- 서명 패드 ----------
+function makePad(canvas, hint) {
+  const ctx = canvas.getContext('2d');
+  let drawing = false, last = null, dirty = false;
+  function size() {
+    const r = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    if (canvas.width === Math.round(r.width * dpr) && canvas.height === Math.round(r.height * dpr)) return;
+    const keep = dirty ? canvas.toDataURL() : null;
+    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineWidth = 3.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111';
+    if (keep) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = keep; }
+  }
+  const pos = e => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  canvas.addEventListener('pointerdown', e => { size(); drawing = true; last = pos(e); canvas.setPointerCapture(e.pointerId); e.preventDefault(); });
+  canvas.addEventListener('pointermove', e => {
+    if (!drawing) return; const p = pos(e);
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p;
+    if (!dirty) { dirty = true; hint.hidden = true; }
+  });
+  ['pointerup', 'pointercancel'].forEach(t => canvas.addEventListener(t, () => drawing = false));
+  window.addEventListener('resize', size);
+  return {
+    size, isEmpty: () => !dirty,
+    clear() { ctx.clearRect(0, 0, canvas.width, canvas.height); dirty = false; hint.hidden = false; },
+    // 서명 부분만 잘라 낸 캔버스
+    trimmed() {
+      const w = canvas.width, h = canvas.height, d = ctx.getImageData(0, 0, w, h).data;
+      let x0 = w, y0 = h, x1 = 0, y1 = 0;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 20) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 < x0) return null;
+      const c = document.createElement('canvas'); c.width = x1 - x0 + 1; c.height = y1 - y0 + 1;
+      c.getContext('2d').drawImage(canvas, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
+      return c;
+    }
+  };
+}
+const pad1 = makePad($('pad1'), $('hint1'));
+const pad2 = makePad($('pad2'), $('hint2'));
+document.querySelectorAll('[data-clear]').forEach(b => b.onclick = () => (b.dataset.clear === '1' ? pad1 : pad2).clear());
+$('same').onchange = () => { $('pad2box').hidden = $('same').checked; if (!$('same').checked) setTimeout(pad2.size, 0); };
+
+// ---------- 기관 정보 ----------
+function fill(data) {
+  info = data;
+  $('orgName').textContent = data.org;
+  $('orgPrice').textContent = '이용금액 월 ' + data.price.toLocaleString('ko-KR') + '원 (매월 5일 출금)';
+  const opts = ['<option value="">반을 골라 주세요</option>'].concat(data.classes.map(c => '<option>' + c.replace(/</g, '&lt;') + '</option>'), ['<option value="__etc">목록에 없어요 (직접 입력)</option>']);
+  $('cls').innerHTML = opts.join('');
+  if (!data.classes.length) { $('cls').value = '__etc'; $('cls').hidden = true; $('clsEtc').hidden = false; }
+  $('bank').innerHTML = '<option value="">은행을 골라 주세요</option>' + BANKS.map(b => '<option>' + b + '</option>').join('');
+  $('formImg').src = data.price === 11000 ? 'form_11000.jpg' : 'form_9900.jpg';
+  $('loading').hidden = true; $('f').hidden = false;
+  pad1.size();
+}
+$('cls').onchange = () => { $('clsEtc').hidden = $('cls').value !== '__etc'; };
+$('bank').onchange = () => { $('bankEtc').hidden = $('bank').value !== '기타'; };
+
+function showBad(msg) { $('loading').hidden = true; $('bad').hidden = false; $('bad').textContent = msg; }
+
+if (TEST) fill({ ok: true, org: '시험어린이집', price: Number(params.get('price') || 9900), classes: ['햇살반', '새싹반', '꽃잎반'] });
+else if (!code) showBad('기관 QR코드로 다시 열어 주세요.');
+else fetch(API + '?apply=' + encodeURIComponent(code)).then(r => r.json()).then(d => d.ok ? fill(d) : showBad(d.error || '기관 정보를 찾을 수 없어요. QR코드를 다시 찍어 주세요.'))
+  .catch(() => showBad('인터넷 연결을 확인하고 다시 열어 주세요.'));
+
+// ---------- 입력 확인 ----------
+const digits = s => String(s || '').replace(/[^0-9]/g, '');
+function values() {
+  return {
+    반: ($('cls').value === '__etc' ? $('clsEtc').value : $('cls').value).trim(),
+    아이: $('kid').value.trim(), 형제반: $('sibCls').value.trim(), 형제이름: $('sibName').value.trim(),
+    신청인: $('parent').value.trim(), 예금주: $('holder').value.trim(), 연락처: $('phone').value.trim(),
+    생년월일: digits($('birth').value), 은행: ($('bank').value === '기타' ? $('bankEtc').value : $('bank').value).trim(),
+    계좌: $('acct').value.trim()
+  };
+}
+function check(v) {
+  if (!v.반) return '반을 골라 주세요.';
+  if (!v.아이) return '아이 이름을 적어 주세요.';
+  if (!v.신청인) return '신청인(학부모) 이름을 적어 주세요.';
+  if (!v.예금주) return '예금주 이름을 적어 주세요.';
+  if (digits(v.연락처).length < 10) return '연락처를 확인해 주세요.';
+  if (v.생년월일.length !== 6) return '예금주 생년월일 6자리를 적어 주세요. (예: 900512)';
+  if (!v.은행) return '은행을 골라 주세요.';
+  const a = digits(v.계좌);
+  if (a.length < 8) return '계좌번호를 확인해 주세요.';
+  if (/^01[016789]\d{7,8}$/.test(a)) return '휴대폰 번호로 된 평생계좌는 등록할 수 없어요. 다른 계좌번호를 적어 주세요.';
+  if (!$('ag1').checked || !$('ag2').checked) return '필수 동의에 체크해 주세요.';
+  if (pad1.isEmpty()) return '신청인 서명을 해 주세요.';
+  if (!$('same').checked && pad2.isEmpty()) return '예금주 서명을 해 주세요.';
+  return '';
+}
+
+// ---------- 신청서 그리기 (양식 좌표는 PDF pt 기준, 595.32 x 841.92) ----------
+const loadImg = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+async function render(v) {
+  const tpl = await loadImg(info.price === 11000 ? 'form_11000.jpg' : 'form_9900.jpg');
+  try { await document.fonts.load('700 30px "Noto Sans KR"'); } catch (e) {}
+  const c = document.createElement('canvas'); c.width = tpl.width; c.height = tpl.height;
+  const g = c.getContext('2d'); const k = tpl.width / 595.32;
+  g.drawImage(tpl, 0, 0);
+  g.fillStyle = '#111'; g.textBaseline = 'middle';
+  function text(x, y, size, s, maxW, align) {
+    let fs = size; g.font = '700 ' + (fs * k) + 'px "Noto Sans KR", sans-serif';
+    while (maxW && g.measureText(s).width > maxW * k && fs > 6) { fs -= 0.5; g.font = '700 ' + (fs * k) + 'px "Noto Sans KR", sans-serif'; }
+    g.textAlign = align || 'left'; g.fillText(s, x * k, y * k);
+  }
+  const mid = (a, b) => (a + b) / 2;
+  if (info.price !== 9900 && info.price !== 11000) { // 다른 금액은 금액 칸을 덮어씀
+    g.fillStyle = '#fff'; g.fillRect(150 * k, 322 * k, 123 * k, 40 * k); g.fillStyle = '#111';
+    text(211, 336, 11, info.price.toLocaleString('ko-KR') + '원', 115, 'center');
+  }
+  if (v.형제반) text(312, 345.6, 7.5, v.형제반, 60);
+  if (v.형제이름) text(318, 354.6, 7.5, v.형제이름, 60);
+  text(160, mid(363.8, 391.9), 12, info.org, 400);
+  text(160, mid(391.9, 420.1), 12, v.반, 108); text(435, mid(391.9, 420.1), 12, v.아이, 130);
+  text(160, mid(420.1, 448.2), 12, v.예금주, 108); text(435, mid(420.1, 448.2), 12, v.연락처, 130);
+  text(160, mid(448.2, 476.4), 12, v.생년월일, 108); text(435, mid(448.2, 476.4), 12, v.은행, 130);
+  text(160, mid(476.4, 504.5), 12, v.계좌, 190);
+  // 동의함 체크
+  g.strokeStyle = '#111'; g.lineWidth = 2.2 * k; g.lineCap = 'round'; g.lineJoin = 'round';
+  [597, 642].forEach(cy => { g.beginPath(); g.moveTo(488.5 * k, cy * k); g.lineTo(492.5 * k, (cy + 4.5) * k); g.lineTo(500 * k, (cy - 5.5) * k); g.stroke(); });
+  // 날짜
+  const now = new Date(Date.now() + 9 * 3600e3);
+  text(222, 743.5, 11, String(now.getUTCFullYear()), 0, 'right');
+  text(291, 743.5, 11, String(now.getUTCMonth() + 1), 0, 'right');
+  text(348, 743.5, 11, String(now.getUTCDate()), 0, 'right');
+  // 서명
+  function sign(sc, x0, y0, x1, y1) {
+    if (!sc) return; const bw = (x1 - x0) * k, bh = (y1 - y0) * k, s = Math.min(bw / sc.width, bh / sc.height);
+    const w = sc.width * s, h = sc.height * s; g.drawImage(sc, x0 * k + (bw - w) / 2, y0 * k + (bh - h) / 2, w, h);
+  }
+  const s1 = pad1.trimmed(), s2 = $('same').checked ? s1 : pad2.trimmed();
+  sign(s1, 142, 761, 246, 790);
+  sign(s2, 368, 761, 496, 790);
+  return c.toDataURL('image/jpeg', 0.85);
+}
+
+let image = null;
+$('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const v = values(), msg = check(v);
+  $('err').textContent = msg; if (msg) return;
+  $('go').disabled = true; $('go').textContent = '신청서 만드는 중…';
+  try {
+    image = await render(v);
+    $('preview').innerHTML = '<img alt="작성한 신청서" src="' + image + '">';
+    $('f').hidden = true; $('confirm').hidden = false; window.scrollTo(0, 0);
+  } catch (err) { $('err').textContent = '신청서를 만들지 못했어요. 새로고침 후 다시 해 주세요.'; }
+  $('go').disabled = false; $('go').textContent = '신청서 확인하기';
+});
+$('back').onclick = () => { $('confirm').hidden = true; $('f').hidden = false; };
+$('send').onclick = async () => {
+  if (TEST) { $('err2').textContent = '시험 모드라 제출하지 않았어요.'; return; }
+  $('send').disabled = true; $('send').textContent = '제출하는 중…'; $('err2').textContent = '';
+  try {
+    const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ kind: 'apply', code, fields: values(), agree1: $('ag1').checked, agree2: $('ag2').checked, image }) });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || '');
+    $('confirm').hidden = true; $('done').hidden = false; window.scrollTo(0, 0);
+  } catch (err) {
+    $('err2').textContent = '제출하지 못했어요. ' + (err.message || '인터넷 연결을 확인하고 다시 눌러 주세요.');
+    $('send').disabled = false; $('send').textContent = '제출하기';
+  }
+};
+</script>
+</body>
+</html>
