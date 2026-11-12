@@ -112,7 +112,7 @@
       <label for="holder">예금주 이름</label>
       <input id="holder">
       <label for="phone">연락처</label>
-      <input id="phone" type="tel" inputmode="tel" placeholder="010-0000-0000" autocomplete="tel">
+      <input id="phone" type="tel" inputmode="numeric" placeholder="숫자만 입력 (01012345678)" autocomplete="tel" maxlength="13">
       <label for="birth">예금주 생년월일 <small>(6자리)</small></label>
       <input id="birth" inputmode="numeric" maxlength="6" placeholder="예: 900512">
       <label for="bank">은행</label>
@@ -282,6 +282,13 @@ $('pinBox').addEventListener('submit', async e => {
 
 // ---------- 입력 확인 ----------
 const digits = s => String(s || '').replace(/[^0-9]/g, '');
+// 연락처: 숫자만 쳐도 010-1234-5678 모양으로 자동 정리
+$('phone').addEventListener('input', e => {
+  const d = digits(e.target.value).slice(0, 11);
+  e.target.value = d.length < 4 ? d : d.length < 8 ? d.slice(0, 3) + '-' + d.slice(3)
+    : d.length < 11 ? d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6)
+    : d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
+});
 function values() {
   return {
     반: ($('cls').value === '__etc' ? $('clsEtc').value : $('cls').value).trim(),
