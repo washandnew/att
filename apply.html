@@ -27,6 +27,10 @@
   .terms { font-size:14px; color:var(--ink); padding-left:18px; margin:0; }
   .terms li { margin:3px 0; }
   .terms b { color:var(--red); }
+  .kind { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+  .kind label { margin:0; display:flex; align-items:center; justify-content:center; gap:6px; border:1.5px solid var(--line); border-radius:10px; padding:10px 6px; font-size:15px; cursor:pointer; }
+  .kind label:has(input:checked) { border-color:var(--sky-d); background:var(--sky-p); color:var(--sky-d); font-weight:700; }
+  .kind input { width:auto; margin:0; }
   .check { display:flex; gap:10px; align-items:flex-start; margin:10px 0; font-size:15px; }
   .check input { width:22px; height:22px; margin:1px 0 0; flex:none; }
   details { margin-top:10px; font-size:14px; }
@@ -60,6 +64,11 @@
     <div class="card">
       <div class="org" id="orgName"></div>
       <div class="price" id="orgPrice"></div>
+      <div class="kind" role="radiogroup" aria-label="신청 종류">
+        <label><input type="radio" name="kind" value="new" checked> 처음 신청</label>
+        <label><input type="radio" name="kind" value="change"> 출금 계좌 변경</label>
+      </div>
+      <div class="hint" id="kindHint">이미 이용 중이면 ‘출금 계좌 변경’을 골라 주세요.</div>
     </div>
 
     <div class="card">
@@ -78,7 +87,12 @@
     </div>
 
     <div class="card">
-      <h2>출금 계좌</h2>
+      <h2 id="acctTitle">출금 계좌</h2>
+      <div id="oldBox" hidden>
+        <label for="oldHolder">지금(바꾸기 전) 예금주 이름</label>
+        <input id="oldHolder">
+        <div class="hint">아래에는 새로 바꿀 계좌 정보를 적어 주세요.</div>
+      </div>
       <label for="parent">신청인(학부모) 이름</label>
       <input id="parent" autocomplete="name">
       <label for="holder">예금주 이름</label>
@@ -210,6 +224,13 @@ function fill(data) {
   pad1.size();
 }
 $('cls').onchange = () => { $('clsEtc').hidden = $('cls').value !== '__etc'; };
+const isChange = () => document.querySelector('input[name="kind"]:checked').value === 'change';
+document.querySelectorAll('input[name="kind"]').forEach(r => r.onchange = () => {
+  const c = isChange();
+  $('oldBox').hidden = !c;
+  $('acctTitle').textContent = c ? '새 출금 계좌' : '출금 계좌';
+  document.querySelector('header h1').textContent = c ? '식판생각 출금 계좌 변경' : '식판생각 자동이체 신청';
+});
 $('bank').onchange = () => { $('bankEtc').hidden = $('bank').value !== '기타'; };
 
 function showBad(msg) { $('loading').hidden = true; $('bad').hidden = false; $('bad').textContent = msg; }
@@ -227,7 +248,8 @@ function values() {
     아이: $('kid').value.trim(), 형제반: $('sibCls').value.trim(), 형제이름: $('sibName').value.trim(),
     신청인: $('parent').value.trim(), 예금주: $('holder').value.trim(), 연락처: $('phone').value.trim(),
     생년월일: digits($('birth').value), 은행: ($('bank').value === '기타' ? $('bankEtc').value : $('bank').value).trim(),
-    계좌: $('acct').value.trim()
+    계좌: $('acct').value.trim(),
+    기존예금주: isChange() ? $('oldHolder').value.trim() : ''
   };
 }
 function check(v) {
@@ -262,6 +284,11 @@ async function render(v) {
     g.textAlign = align || 'left'; g.fillText(s, x * k, y * k);
   }
   const mid = (a, b) => (a + b) / 2;
+  if (isChange()) { // 제목을 '출금계좌 변경 신청서'로 바꿔 그림
+    g.fillStyle = '#fff'; g.fillRect(60 * k, 110 * k, 476 * k, 34 * k); g.fillStyle = '#111';
+    text(297.66, 127, 21, '식판생각 자동이체 출금계좌 변경 신청서', 470, 'center');
+    if (v.기존예금주) { g.fillStyle = '#d33a2c'; text(297.66, 150, 9, '(변경 전 예금주: ' + v.기존예금주 + ')', 400, 'center'); g.fillStyle = '#111'; }
+  }
   if (info.price !== 9900 && info.price !== 11000) { // 다른 금액은 금액 칸을 덮어씀
     g.fillStyle = '#fff'; g.fillRect(150 * k, 322 * k, 123 * k, 40 * k); g.fillStyle = '#111';
     text(211, 336, 11, info.price.toLocaleString('ko-KR') + '원', 115, 'center');
@@ -311,9 +338,10 @@ $('send').onclick = async () => {
   $('send').disabled = true; $('send').textContent = '제출하는 중…'; $('err2').textContent = '';
   try {
     const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ kind: 'apply', code, fields: values(), agree1: $('ag1').checked, agree2: $('ag2').checked, image }) });
+      body: JSON.stringify({ kind: 'apply', type: isChange() ? 'change' : 'new', code, fields: values(), agree1: $('ag1').checked, agree2: $('ag2').checked, image }) });
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || '');
+    if (isChange()) $('done').querySelector('h2').textContent = '계좌 변경 신청이 접수됐어요';
     $('confirm').hidden = true; $('done').hidden = false; window.scrollTo(0, 0);
   } catch (err) {
     $('err2').textContent = '제출하지 못했어요. ' + (err.message || '인터넷 연결을 확인하고 다시 눌러 주세요.');
