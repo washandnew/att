@@ -980,6 +980,8 @@
         // 저장·보내기 / 제출
         // 제출은 지출관리 Apps Script 웹앱으로 보낸다 → 구글 드라이브 '워시앤뉴 근로계약서' 폴더에 PDF 저장 + 텔레그램 알림
         const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbwOUXHGmFGAR17mssgjJXqvtyeWYeKLgfKG5ZU20YIaYNCVT_qyVy4dZfQJZUsd6En-qw/exec';
+        // 급여관리 시트(별도 프로젝트) — 제출하면 급여대상자·이번 달 탭·출퇴근 근무자에 새 직원 자동 추가
+        const PAYROLL_URL = 'https://script.google.com/macros/s/AKfycbxLisWWh9Gf-IDnGYmZmTLHus6Td3Wqwpe5srN5YFTRtzlkMOGrWTr2SIZTcfhqHXp_pw/exec';
         const msg = document.getElementById('send-msg');
         const nameInput = document.querySelector('input[placeholder="근로자 성명"]');
 
@@ -1129,6 +1131,12 @@
                     body: JSON.stringify({ kind: 'contract', name: name, file: '근로계약서_' + name + '_' + stamp() + '.pdf', data: formData(name), pdf: pdfBase64 })
                 }).then(res => res.json());
                 if (!r.ok) throw new Error(r.오류 || '서버 오류');
+                // 급여 시트에 직원 추가 — 서명·도장 그림은 빼고 보낸다. 실패해도 계약서 제출은 이미 끝났으니 화면엔 성공으로 둔다
+                try {
+                    const pd = formData(name); delete pd.sig; delete pd.stamp;
+                    await fetch(PAYROLL_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ kind: 'contract', name: name, data: pd }) });
+                } catch (e) {}
                 say('✅ 제출했어요. 대표님께 전달됐어요', 'ok');
             });
         });
