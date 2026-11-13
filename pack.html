@@ -119,14 +119,17 @@ function showList() {
         '<div class="org' + (o.changed ? ' changed' : '') + '" data-org="' + esc(o.name) + '"><span>' + esc(o.name) +
         (o.changed ? '<span class="badge">변경</span>' : '') + '</span><small>포장 ' + o.pack + '개</small></div>').join('') + '</div>'
     : '<div class="msg">검색 결과가 없어요.</div>';
-  document.querySelectorAll('.org').forEach(el => el.onclick = () => { showOrg(el.dataset.org); window.scrollTo(0, 0); });
+  document.querySelectorAll('.org').forEach(el => el.onclick = () => {
+    listScroll = window.scrollY;
+    history.pushState({ org: el.dataset.org }, '', '#' + encodeURIComponent(el.dataset.org));
+    showOrg(el.dataset.org); window.scrollTo(0, 0);
+  });
 }
 
 function showOrg(name) {
   const o = orgs.find(x => x.name === name);
   if (!o) return showList();
   current = name;
-  history.replaceState(null, '', '#' + encodeURIComponent(name));
   let h = '<button class="back" id="back">← 기관 목록</button>';
   h += '<div class="title">' + esc(o.name) + '</div>';
   h += '<div class="sum"><div><b>' + o.kids + '</b><span>원아수</span></div><div><b>' + o.teacher + '</b><span>교사용식판</span></div><div><b>' + o.pack + '</b><span>포장 수량</span></div></div>';
@@ -139,13 +142,24 @@ function showOrg(name) {
     h += '</div>';
   });
   document.getElementById('main').innerHTML = h;
-  document.getElementById('back').onclick = () => { history.replaceState(null, '', location.pathname); showList(); };
+  document.getElementById('back').onclick = () => history.back();
 }
 
 document.getElementById('q').addEventListener('input', () => { if (current) history.replaceState(null, '', location.pathname); showList(); });
+// 폰 뒤로가기: 기관 화면 → 목록 (창이 닫히지 않게 기관을 열 때 기록을 하나 쌓아 둔다)
+window.addEventListener('popstate', () => {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h) { showOrg(h); window.scrollTo(0, 0); }
+  else { showList(); window.scrollTo(0, listScroll); }
+});
+let listScroll = 0;
 document.getElementById('reload').onclick = load;
 const hash = decodeURIComponent(location.hash.slice(1));
-if (hash) current = hash;
+if (hash) {  // 기관 주소로 바로 열었을 때도 뒤로가기는 목록으로
+  current = hash;
+  history.replaceState(null, '', location.pathname);
+  history.pushState({ org: hash }, '', '#' + encodeURIComponent(hash));
+}
 load();
 </script>
 </body>
