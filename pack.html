@@ -87,14 +87,25 @@ function parseCSV(t) {
 const num = v => { const n = parseFloat(String(v || '').replace(/,/g, '')); return isNaN(n) ? null : n; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-// 변경시각은 "11/11 16:20" 형식 (연도 없음)
+// from~to 사이 평일(월~금) 시간을 일 단위로 — 주말은 포장팀이 쉬어서 안 셈
+function weekdayDays(from, to) {
+  let a = new Date(from), total = 0;
+  while (a < to) {
+    const end = new Date(a.getFullYear(), a.getMonth(), a.getDate() + 1);
+    const stop = end < to ? end : to;
+    if (a.getDay() !== 0 && a.getDay() !== 6) total += stop - a;
+    a = stop;
+  }
+  return total / 86400000;
+}
+// 변경시각은 "11/11 16:20" 형식 (연도 없음). 평일 CHANGE_DAYS일 동안 강조
 function recent(s) {
   const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2})/);
   if (!m) return false;
   const now = new Date();
   let d = new Date(now.getFullYear(), m[1]-1, m[2], m[3], m[4]);
   if (d > now) d.setFullYear(d.getFullYear() - 1);
-  return (now - d) < CHANGE_DAYS * 86400000;
+  return weekdayDays(d, now) < CHANGE_DAYS;
 }
 
 const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
