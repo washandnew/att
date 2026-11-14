@@ -35,6 +35,21 @@
   .note { margin-top:8px; font-size:14px; background:#fff8e1; border-radius:8px; padding:6px 8px; }
   .chg { margin-top:6px; font-size:13px; color:var(--red); font-weight:600; }
   .msg { text-align:center; color:var(--gray); padding:30px 0; }
+  /* 전달사항 (놓치기 쉬운 일) */
+  .notice { border-radius:12px; padding:12px 14px; margin-bottom:12px; }
+  .notice.today { background:#fff3e0; border:2px solid #ef6c00; }
+  .notice.soon { background:#fff; border:1px dashed #ffb74d; }
+  .notice h2 { margin:0 0 8px; font-size:17px; color:#e65100; }
+  .notice.soon h2 { font-size:15px; color:#ef6c00; }
+  .notice ul { margin:0; padding:0; list-style:none; }
+  .notice li { padding:7px 0; border-top:1px solid #ffe0b2; font-size:16px; line-height:1.4; }
+  .notice li:first-child { border-top:0; padding-top:0; }
+  .notice li b { color:#bf360c; }
+  .notice li .qty { display:inline-block; background:#e65100; color:#fff; border-radius:6px; padding:0 7px; margin-left:4px; font-weight:700; }
+  .notice li .when { color:var(--gray); font-size:13px; margin-right:4px; }
+  .notice li.done { color:var(--gray); text-decoration:line-through; }
+  .notice li.done .qty { background:#9e9e9e; }
+  .badge.nt { background:#e65100; }
 </style>
 </head>
 <body>
@@ -50,8 +65,11 @@
 <script>
 const SHEET = '1KG3RyMOiplZ2eqSpdcpe2yncNw1Vm4EFsCdQOjuLtcQ';
 const URL_ = 'https://docs.google.com/spreadsheets/d/' + SHEET + '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent('반별원아수');
+// 전달사항 탭: A 날짜(포장하는 날) | B 기관(또는 '전체') | C 내용 | D 수량 | E 완료
+const NOTICE_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET + '/gviz/tq?tqx=out:csv&headers=0&range=A1:E500&sheet=' + encodeURIComponent('전달사항');
+const SOON_DAYS = 7;
 const CHANGE_DAYS = 2;
-let orgs = [], updated = '', current = null;
+let orgs = [], updated = '', current = null, notices = [];
 
 function parseCSV(t) {
   const rows = []; let row = [], f = '', q = false;
@@ -79,10 +97,54 @@ function recent(s) {
   return (now - d) < CHANGE_DAYS * 86400000;
 }
 
+const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+function dayLabel(s) {
+  const [y, m, d] = s.split('-').map(Number);
+  return m + '/' + d + '(' + '일월화수목금토'[new Date(y, m - 1, d).getDay()] + ')';
+}
+// 오늘 할 일 = 날짜가 오늘이거나, 날짜 없이 아직 완료 안 한 것 / 다가오는 일 = 내일 ~ SOON_DAYS일 뒤
+function noticeGroups(org) {
+  const today = ymd(new Date());
+  const lim = new Date(); lim.setDate(lim.getDate() + SOON_DAYS);
+  const last = ymd(lim);
+  const mine = notices.filter(n => !org || n.org === org || n.org === '전체' || !n.org);
+  return {
+    today: mine.filter(n => n.date === today || (!n.date && !n.done)),
+    soon: mine.filter(n => n.date > today && n.date <= last).sort((a, b) => a.date < b.date ? -1 : 1)
+  };
+}
+function noticeItem(n, withDate, withOrg) {
+  return '<li class="' + (n.done ? 'done' : '') + '">' +
+    (withDate ? '<span class="when">' + dayLabel(n.date) + '</span>' : '') +
+    (withOrg && n.org ? '<b>' + esc(n.org) + '</b> · ' : '') + esc(n.text) +
+    (n.qty != null ? '<span class="qty">' + n.qty + '개</span>' : '') +
+    (n.done ? ' (완료)' : '') + '</li>';
+}
+function noticeHTML(org) {
+  const g = noticeGroups(org);
+  let h = '';
+  if (g.today.length) h += '<div class="notice today"><h2>📌 오늘 꼭 챙길 일</h2><ul>' + g.today.map(n => noticeItem(n, false, !org)).join('') + '</ul></div>';
+  if (g.soon.length) h += '<div class="notice soon"><h2>다가오는 일</h2><ul>' + g.soon.map(n => noticeItem(n, true, !org)).join('') + '</ul></div>';
+  return h;
+}
+async function loadNotices() {
+  try {
+    const rows = parseCSV(await (await fetch(NOTICE_URL + '&_=' + Date.now())).text());
+    // 탭이 없으면 구글이 첫 탭을 돌려주므로 머리글로 확인
+    if (!rows[0] || (rows[0][2] || '').trim() !== '내용') return [];
+    return rows.slice(1).map(r => ({
+      date: /^\d{4}-\d{2}-\d{2}$/.test((r[0] || '').trim()) ? r[0].trim() : '',
+      org: (r[1] || '').trim(), text: (r[2] || '').trim(), qty: num(r[3]),
+      done: String(r[4]).toUpperCase() === 'TRUE'
+    })).filter(n => n.text);
+  } catch (e) { return []; }
+}
+
 async function load() {
   document.getElementById('meta').textContent = '불러오는 중…';
   try {
-    const res = await fetch(URL_ + '&_=' + Date.now());
+    const [res, nts] = await Promise.all([fetch(URL_ + '&_=' + Date.now()), loadNotices()]);
+    notices = nts;
     const rows = parseCSV(await res.text());
     updated = (rows[0] && rows[0][11]) || '';
     const map = new Map();
@@ -114,11 +176,13 @@ function showList() {
   current = null;
   const q = document.getElementById('q').value.trim();
   const list = orgs.filter(o => !q || o.name.includes(q));
-  document.getElementById('main').innerHTML = list.length
+  const todayOrgs = new Set(noticeGroups().today.filter(n => !n.done).map(n => n.org));
+  document.getElementById('main').innerHTML = (q ? '' : noticeHTML()) + (list.length
     ? '<div class="list">' + list.map(o =>
         '<div class="org' + (o.changed ? ' changed' : '') + '" data-org="' + esc(o.name) + '"><span>' + esc(o.name) +
+        (todayOrgs.has(o.name) ? '<span class="badge nt">전달</span>' : '') +
         (o.changed ? '<span class="badge">변경</span>' : '') + '</span><small>포장 ' + o.pack + '개</small></div>').join('') + '</div>'
-    : '<div class="msg">검색 결과가 없어요.</div>';
+    : '<div class="msg">검색 결과가 없어요.</div>');
   document.querySelectorAll('.org').forEach(el => el.onclick = () => {
     listScroll = window.scrollY;
     history.pushState({ org: el.dataset.org }, '', '#' + encodeURIComponent(el.dataset.org));
@@ -132,6 +196,7 @@ function showOrg(name) {
   current = name;
   let h = '<button class="back" id="back">← 기관 목록</button>';
   h += '<div class="title">' + esc(o.name) + '</div>';
+  h += noticeHTML(o.name);
   h += '<div class="sum"><div><b>' + o.kids + '</b><span>원아수</span></div><div><b>' + o.teacher + '</b><span>교사용식판</span></div><div><b>' + o.pack + '</b><span>포장 수량</span></div></div>';
   o.classes.forEach(c => {
     const pack = c.pack != null ? c.pack : (c.kids || 0) + (c.teacher || 0);
