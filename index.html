@@ -14,24 +14,27 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0}
-body{font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+body{font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Noto Sans Myanmar","Myanmar Text","Noto Sans Sinhala","Iskoola Pota","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 .hero{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);color:#fff;padding:calc(18px + env(safe-area-inset-top)) 20px 64px;border-radius:0 0 28px 28px}
-.hero .in{max-width:440px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.hero .in{max-width:440px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .brand{font-weight:800;font-size:17px;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
 .brand i{width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-style:normal;font-size:15px}
+.right{display:flex;gap:6px;align-items:center}
 .site{font-size:13px;font-weight:600;background:rgba(255,255,255,.18);padding:6px 12px;border-radius:999px}
+.lang{font:inherit;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);border:0;border-radius:999px;padding:6px 10px;-webkit-appearance:none;appearance:none}
+.lang option{color:#141A24}
 .wrap{max-width:440px;margin:-44px auto 0;padding:0 16px 40px}
 .card{background:var(--card);border-radius:24px;padding:24px 20px;box-shadow:0 6px 24px rgba(20,26,36,.06);margin-bottom:14px}
 .hello{font-size:15px;color:var(--sub);font-weight:500}
 .who{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-top:2px}
 .date{font-size:15px;color:var(--sub);margin-top:18px;text-align:center}
 .clock{font-size:56px;font-weight:800;letter-spacing:-2px;text-align:center;font-variant-numeric:tabular-nums;line-height:1.1;margin:2px 0 4px}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:20px;padding:24px 0;font:inherit;font-size:24px;font-weight:800;color:#fff;margin-top:16px;cursor:pointer;transition:transform .08s}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:20px;padding:24px 12px;font:inherit;font-size:24px;font-weight:800;color:#fff;margin-top:16px;cursor:pointer;transition:transform .08s;text-align:center}
 .btn:active{transform:scale(.97)}.btn[disabled]{opacity:.55}
 .b-in{background:var(--blue);box-shadow:0 8px 20px rgba(47,91,234,.35)}
 .b-out{background:var(--red);box-shadow:0 8px 20px rgba(240,68,82,.32)}
-.b-done{background:var(--chip);color:var(--sub);font-size:19px;padding:20px 0}
-.b-ghost{background:var(--chip);color:var(--ink);font-size:18px;padding:18px 0;box-shadow:none}
+.b-done{background:var(--chip);color:var(--sub);font-size:19px;padding:20px 12px}
+.b-ghost{background:var(--chip);color:var(--ink);font-size:18px;padding:18px 12px;box-shadow:none}
 .msg{text-align:center;font-size:15px;font-weight:600;margin-top:14px;min-height:20px}
 .ok{color:var(--green)}.err{color:var(--red)}
 .today{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -41,11 +44,15 @@ body{font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR","
 .menu{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:20px;padding:18px 20px;box-shadow:0 6px 24px rgba(20,26,36,.06);text-decoration:none;color:var(--ink);font-weight:700;font-size:17px;margin-bottom:14px}
 .menu small{display:block;font-weight:500;color:var(--hint);font-size:13px;margin-top:2px}.menu em{font-style:normal;color:var(--hint);font-size:22px}
 .names{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.name{display:flex;align-items:center;gap:10px;border:0;background:var(--chip);border-radius:16px;padding:14px;font:inherit;font-size:18px;font-weight:700;color:var(--ink);cursor:pointer;text-align:left}
+.name{display:flex;align-items:center;gap:10px;border:0;background:var(--chip);border-radius:16px;padding:14px;font:inherit;font-size:18px;font-weight:700;color:var(--ink);cursor:pointer;text-align:left;word-break:break-word}
 .name:active{background:#E4E8EE}
 .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:800;flex:none;letter-spacing:-.5px}
 .hint{color:var(--hint);font-size:13px;text-align:center;margin-top:14px;line-height:1.5;white-space:pre-line}
-.warn{background:#FFF4E5;color:#B54708;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;margin-bottom:14px;text-align:center}
+.warn{background:#FFF4E5;color:#B54708;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;margin-bottom:14px;text-align:center;white-space:pre-line}
+.gps{background:#FFF4E5;border:2px solid #F79009;border-radius:20px;padding:18px;margin-bottom:14px;color:#7A2E0E}
+.gps b{display:block;font-size:19px;margin-bottom:8px}
+.gps p{margin:0;font-size:15px;line-height:1.6;white-space:pre-line}
+.gps .btn{background:#F79009;font-size:18px;padding:16px 12px;margin-top:12px;box-shadow:none}
 a.link{color:var(--hint);font-size:13px;display:block;text-align:center;margin-top:18px;text-decoration:none}
 .nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .nav button{border:0;background:var(--chip);border-radius:12px;width:42px;height:42px;font-size:20px;color:var(--ink);cursor:pointer}
@@ -61,16 +68,20 @@ tr:last-child td{border-bottom:0}
 td.d{color:var(--sub)}td.d .we{color:var(--red)}td.h{font-weight:800}td.miss{color:var(--hint)}
 .label{font-size:14px;font-weight:700;color:var(--sub);margin:18px 0 8px}
 .field{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:14px;padding:14px;font:inherit;font-size:17px;color:var(--ink);background:var(--card)}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.times span{display:block;font-size:13px;color:var(--sub);margin-bottom:4px}
+.now{font-size:13px;color:var(--sub);margin-top:8px}
 .opts{display:grid;gap:8px}
 .opt{border:2px solid transparent;background:var(--chip);border-radius:14px;padding:14px;font:inherit;font-size:16px;font-weight:600;color:var(--ink);text-align:left;cursor:pointer}
 .opt.on{border-color:var(--blue);background:#EAF0FF;color:var(--blue)}
-.warn{white-space:pre-line}
+.steps{margin:14px 0 0;padding-left:22px;font-size:16px;line-height:1.6}
+.steps li{margin-bottom:12px}
 .spin{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:s 1s linear infinite;margin:30px auto}
 @keyframes s{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="hero"><div class="in"><div class="brand"><i>✓</i>워시앤뉴 출퇴근</div><div class="site" id="site"></div></div></div>
+<div class="hero"><div class="in"><div class="brand"><i>✓</i>워시앤뉴</div><div class="right"><select class="lang" id="lang" aria-label="Language"></select><div class="site" id="site"></div></div></div></div>
 <div class="wrap" id="app"><div class="card"><div class="spin"></div></div></div>
 <script>
 var Q = new URLSearchParams(location.search);
@@ -85,10 +96,129 @@ var me = store.get('name_' + D.site);
 var pos = null, posErr = '', clockTimer = null;
 var COLORS = ['#2F5BEA', '#12B76A', '#F79009', '#7A5AF8', '#EE46BC', '#0BA5EC', '#F04452', '#667085'];
 
+// ---------- 언어 ----------
+// 사람별 기본 언어 (본인이 위 언어 버튼으로 바꾸면 이 폰에 기억)
+var NAME_LANG = {'이현주': 'vi', 'THANT NAING TUN': 'my', 'KYAW PONYA HEIN': 'my', 'YE HTET': 'my',
+  'FASRY': 'si', 'DILSHAN': 'si', 'NETHMI': 'si'};
+var LANGS = [['ko', '한국어'], ['en', 'English'], ['vi', 'Tiếng Việt'], ['my', 'မြန်မာ'], ['si', 'සිංහල']];
+var TX = {
+hello:{ko:'안녕하세요',en:'Hello',vi:'Xin chào',my:'မင်္ဂလာပါ',si:'ආයුබෝවන්'},
+nim:{ko:'{n} 님',en:'{n}',vi:'{n}',my:'{n}',si:'{n}'},
+in:{ko:'출근하기',en:'Clock in',vi:'Vào ca',my:'အလုပ်ဝင်',si:'වැඩට පැමිණීම'},
+out:{ko:'퇴근하기',en:'Clock out',vi:'Tan ca',my:'အလုပ်ဆင်း',si:'වැඩ අවසන්'},
+done:{ko:'오늘 수고하셨어요 · 퇴근 다시 찍기',en:'Good work today · Clock out again',vi:'Hôm nay vất vả rồi · Bấm tan ca lại',my:'ဒီနေ့ ပင်ပန်းသွားပြီ · အလုပ်ဆင်း ပြန်နှိပ်ရန်',si:'අද හොඳින් වැඩ කළා · නැවත වැඩ අවසන් කරන්න'},
+again:{ko:'다시 출근하기 (하루 두 번 근무)',en:'Clock in again (2nd shift today)',vi:'Vào ca lại (ca thứ 2 trong ngày)',my:'ထပ်မံ အလုပ်ဝင် (ဒီနေ့ ဒုတိယအကြိမ်)',si:'නැවත වැඩට පැමිණීම (අද දෙවන වාරය)'},
+todayIn:{ko:'오늘 출근',en:'Today in',vi:'Giờ vào hôm nay',my:'ဒီနေ့ ဝင်ချိန်',si:'අද පැමිණි වේලාව'},
+todayOut:{ko:'오늘 퇴근',en:'Today out',vi:'Giờ ra hôm nay',my:'ဒီနေ့ ဆင်းချိန်',si:'අද පිටවූ වේලාව'},
+mine:{ko:'📋 이번 달 내 근무시간',en:'📋 My hours this month',vi:'📋 Giờ làm tháng này',my:'📋 ဒီလ ကျွန်ုပ်၏ အလုပ်ချိန်',si:'📋 මෙම මාසයේ මගේ වැඩ කාලය'},
+mineSub:{ko:'날짜별 출퇴근과 합계를 볼 수 있어요',en:'See each day and the total',vi:'Xem từng ngày và tổng cộng',my:'နေ့အလိုက်နှင့် စုစုပေါင်း ကြည့်နိုင်သည်',si:'දිනපතා සහ මුළු එකතුව බලන්න'},
+fix:{ko:'✏️ 기록이 잘못됐어요',en:'✏️ My record is wrong',vi:'✏️ Giờ chấm công bị sai',my:'✏️ မှတ်တမ်း မှားနေသည်',si:'✏️ මගේ වාර්තාව වැරදියි'},
+fixSub:{ko:'맞는 시간을 적어 수정 요청',en:'Send the correct time',vi:'Gửi giờ đúng để sửa',my:'မှန်ကန်သော အချိန်ကို ပို့ပါ',si:'නිවැරදි වේලාව යවන්න'},
+notMe:{ko:'내 이름이 아니에요',en:'This is not my name',vi:'Đây không phải tên tôi',my:'ဒါ ကျွန်ုပ်နာမည် မဟုတ်ပါ',si:'මෙය මගේ නම නොවේ'},
+gpsTitle:{ko:'📍 위치(GPS)를 켜 주세요',en:'📍 Please turn on Location (GPS)',vi:'📍 Vui lòng bật Vị trí (GPS)',my:'📍 တည်နေရာ (GPS) ကို ဖွင့်ပါ',si:'📍 කරුණාකර ස්ථානය (GPS) සක්‍රිය කරන්න'},
+gpsBody:{ko:'1. 휴대폰 설정에서 위치(GPS)를 켜요\n2. 인터넷 창에서 위치 권한을 "허용"해요\n3. 아래 버튼을 눌러요\n위치가 꺼져 있으면 출퇴근이 정상 기록되지 않아요',
+  en:'1. Turn on Location (GPS) in phone settings\n2. Allow location for this browser\n3. Tap the button below\nWithout location, your time may not be recorded correctly',
+  vi:'1. Bật Vị trí (GPS) trong cài đặt điện thoại\n2. Cho phép trình duyệt dùng vị trí ("Cho phép")\n3. Bấm nút bên dưới\nNếu tắt vị trí, giờ chấm công có thể không được ghi đúng',
+  my:'1. ဖုန်း ဆက်တင်တွင် တည်နေရာ (GPS) ကို ဖွင့်ပါ\n2. ဘရောက်ဇာကို တည်နေရာ ခွင့်ပြုပါ\n3. အောက်က ခလုတ်ကို နှိပ်ပါ\nတည်နေရာ ပိတ်ထားလျှင် အချိန် မှန်ကန်စွာ မှတ်တမ်းမတင်နိုင်ပါ',
+  si:'1. දුරකථන සැකසුම් තුළ ස්ථානය (GPS) සක්‍රිය කරන්න\n2. මෙම බ්‍රව්සරයට ස්ථානයට අවසර දෙන්න\n3. පහත බොත්තම ඔබන්න\nස්ථානය නැතිනම් ඔබේ වේලාව නිවැරදිව සටහන් නොවිය හැක'},
+gpsRetry:{ko:'📍 위치 다시 찾기',en:'📍 Try location again',vi:'📍 Tìm lại vị trí',my:'📍 တည်နေရာ ပြန်ရှာပါ',si:'📍 ස්ථානය නැවත සොයන්න'},
+gpsFinding:{ko:'위치 찾는 중…',en:'Finding location…',vi:'Đang tìm vị trí…',my:'တည်နေရာ ရှာနေသည်…',si:'ස්ථානය සොයමින්…'},
+noGeo:{ko:'이 폰은 위치 기능이 없어요',en:'This phone has no location feature',vi:'Điện thoại không có chức năng vị trí',my:'ဤဖုန်းတွင် တည်နေရာ မရှိပါ',si:'මෙම දුරකථනයේ ස්ථාන පහසුකම නැත'},
+denied:{ko:'위치 권한이 꺼져 있어요',en:'Location permission is off',vi:'Quyền vị trí đang tắt',my:'တည်နေရာ ခွင့်ပြုချက် ပိတ်ထားသည်',si:'ස්ථාන අවසරය අක්‍රියයි'},
+notFound:{ko:'위치를 못 찾았어요',en:'Could not find location',vi:'Không tìm được vị trí',my:'တည်နေရာ ရှာမတွေ့ပါ',si:'ස්ථානය සොයාගත නොහැක'},
+fixOf:{ko:'{n} 님 기록',en:"{n}'s record",vi:'Chấm công của {n}',my:'{n} ၏ မှတ်တမ်း',si:'{n} ගේ වාර්තාව'},
+fixTitle:{ko:'수정 요청',en:'Correction request',vi:'Yêu cầu sửa',my:'ပြင်ဆင်ရန် တောင်းဆိုမှု',si:'සංශෝධන ඉල්ලීම'},
+wrongWarn:{ko:'오늘 {n} 님 이름으로 찍은 기록이 있어요.\n대표님께 고쳐 달라고 요청한 뒤 내 이름을 다시 골라요.',en:'There is a record under {n} today.\nSend a request, then choose your own name again.',vi:'Hôm nay đã có chấm công dưới tên {n}.\nGửi yêu cầu rồi chọn lại tên của bạn.',my:'ဒီနေ့ {n} အမည်ဖြင့် မှတ်တမ်းရှိနေသည်။\nတောင်းဆိုမှု ပို့ပြီး ကိုယ့်နာမည်ကို ပြန်ရွေးပါ။',si:'අද {n} නමින් වාර්තාවක් ඇත.\nඉල්ලීම යවා ඔබේ නම නැවත තෝරන්න.'},
+date:{ko:'날짜',en:'Date',vi:'Ngày',my:'ရက်စွဲ',si:'දිනය'},
+what:{ko:'무엇이 잘못됐나요?',en:'What is wrong?',vi:'Sai ở đâu?',my:'ဘာမှားနေသလဲ?',si:'වැරැද්ද කුමක්ද?'},
+k0:{ko:'다른 사람 이름으로 찍었어요',en:"I clocked under someone else's name",vi:'Tôi đã chấm công nhầm tên người khác',my:'အခြားသူ၏ နာမည်ဖြင့် နှိပ်မိသည်',si:'වෙනත් අයෙකුගේ නමින් සටහන් කළා'},
+k1:{ko:'출근·퇴근 시간이 틀려요',en:'The in/out time is wrong',vi:'Giờ vào/ra bị sai',my:'ဝင်ချိန်/ဆင်းချိန် မှားနေသည်',si:'පැමිණි/පිටවූ වේලාව වැරදියි'},
+k2:{ko:'출근이나 퇴근을 못 찍었어요',en:'I forgot to clock in or out',vi:'Tôi quên bấm vào ca hoặc tan ca',my:'ဝင်ချိန် သို့မဟုတ် ဆင်းချိန် မနှိပ်မိပါ',si:'පැමිණීම හෝ පිටවීම සටහන් කිරීමට අමතක විය'},
+k3:{ko:'기타',en:'Other',vi:'Khác',my:'အခြား',si:'වෙනත්'},
+times:{ko:'맞는 시간',en:'Correct time',vi:'Giờ đúng',my:'မှန်ကန်သော အချိန်',si:'නිවැරදි වේලාව'},
+tIn:{ko:'출근',en:'In',vi:'Vào',my:'ဝင်',si:'පැමිණීම'},
+tOut:{ko:'퇴근',en:'Out',vi:'Ra',my:'ဆင်း',si:'පිටවීම'},
+timesHint:{ko:'대표님이 승인하면 이 시간으로 바로 고쳐져요. 고칠 칸만 적어도 돼요.',en:'When the manager approves, your record changes to this time. Fill only what needs fixing.',vi:'Khi quản lý duyệt, giờ sẽ được sửa ngay. Chỉ cần điền ô cần sửa.',my:'မန်နေဂျာ အတည်ပြုလျှင် ဤအချိန်သို့ ချက်ချင်း ပြင်ပေးမည်။ ပြင်ရန်လိုသည့် အကွက်ကိုသာ ဖြည့်ပါ။',si:'කළමනාකරු අනුමත කළ විට ඔබේ වාර්තාව මෙම වේලාවට වෙනස් වේ. නිවැරදි කළ යුතු කොටස පමණක් පුරවන්න.'},
+nowRec:{ko:'지금 기록: 출근 {a} / 퇴근 {b}',en:'Current record: in {a} / out {b}',vi:'Hiện tại: vào {a} / ra {b}',my:'လက်ရှိ မှတ်တမ်း: ဝင် {a} / ဆင်း {b}',si:'දැනට ඇති වාර්තාව: පැමිණීම {a} / පිටවීම {b}'},
+memo:{ko:'자세히 (선택)',en:'Details (optional)',vi:'Chi tiết (không bắt buộc)',my:'အသေးစိတ် (ရွေးချယ်နိုင်)',si:'විස්තර (අත්‍යවශ්‍ය නොවේ)'},
+memoPhWrong:{ko:'제 이름은 ○○○이에요',en:'My name is ...',vi:'Tên tôi là ...',my:'ကျွန်ုပ်နာမည်မှာ ...',si:'මගේ නම ...'},
+memoPh:{ko:'예: 휴대폰 배터리가 없었어요',en:'e.g. My phone battery was dead',vi:'VD: Điện thoại hết pin',my:'ဥပမာ - ဖုန်းဘက်ထရီ ကုန်နေသည်',si:'උදා: දුරකථන බැටරිය ඉවර වී තිබුණා'},
+send:{ko:'요청 보내기',en:'Send request',vi:'Gửi yêu cầu',my:'တောင်းဆိုမှု ပို့ရန်',si:'ඉල්ලීම යවන්න'},
+sending:{ko:'보내는 중…',en:'Sending…',vi:'Đang gửi…',my:'ပို့နေသည်…',si:'යවමින්…'},
+pickKind:{ko:'무엇이 잘못됐는지 골라주세요',en:'Please choose what is wrong',vi:'Vui lòng chọn lỗi',my:'ဘာမှားသလဲ ရွေးပါ',si:'වැරැද්ද තෝරන්න'},
+needTime:{ko:'맞는 출근 또는 퇴근 시간을 넣어 주세요',en:'Please enter the correct in or out time',vi:'Vui lòng nhập giờ vào hoặc giờ ra đúng',my:'မှန်ကန်သော ဝင်ချိန် သို့မဟုတ် ဆင်းချိန် ထည့်ပါ',si:'නිවැරදි පැමිණි හෝ පිටවූ වේලාව ඇතුළත් කරන්න'},
+sent:{ko:'요청을 보냈어요 ✅',en:'Request sent ✅',vi:'Đã gửi yêu cầu ✅',my:'တောင်းဆိုမှု ပို့ပြီးပါပြီ ✅',si:'ඉල්ලීම යැව්වා ✅'},
+sentSub:{ko:'대표님이 승인하면 기록이 고쳐져요',en:'Your record will be fixed after approval',vi:'Giờ sẽ được sửa sau khi quản lý duyệt',my:'အတည်ပြုပြီးနောက် မှတ်တမ်း ပြင်ပေးမည်',si:'අනුමත කළ පසු වාර්තාව නිවැරදි වේ'},
+toMain:{ko:'출퇴근 화면으로',en:'Back to clock screen',vi:'Về màn hình chấm công',my:'အချိန်မှတ် စာမျက်နှာသို့',si:'ප්‍රධාන තිරයට'},
+pickName:{ko:'내 이름 고르기',en:'Choose my name',vi:'Chọn tên của tôi',my:'ကျွန်ုပ်နာမည် ရွေးရန်',si:'මගේ නම තෝරන්න'},
+sendFail:{ko:'못 보냈어요: ',en:'Could not send: ',vi:'Không gửi được: ',my:'ပို့၍ မရပါ: ',si:'යැවීමට නොහැකි විය: '},
+cancel:{ko:'← 취소',en:'← Cancel',vi:'← Hủy',my:'← ပယ်ဖျက်',si:'← අවලංගු කරන්න'},
+pick:{ko:'이름을 골라주세요',en:'Choose your name',vi:'Chọn tên của bạn',my:'သင့်နာမည်ကို ရွေးပါ',si:'ඔබේ නම තෝරන්න'},
+pickSub:{ko:'처음 한 번만 고르면 이 폰이 기억해요',en:'Only the first time — this phone will remember',vi:'Chỉ chọn lần đầu, điện thoại sẽ nhớ',my:'ပထမအကြိမ်သာ ရွေးပါ၊ ဤဖုန်းက မှတ်ထားမည်',si:'පළමු වතාවට පමණයි — මෙම දුරකථනය මතක තබා ගනී'},
+confirm:{ko:'확인해 주세요',en:'Please check',vi:'Vui lòng xác nhận',my:'စစ်ဆေးပါ',si:'කරුණාකර තහවුරු කරන්න'},
+isYou:{ko:'{n} 님이 맞나요?',en:'Are you {n}?',vi:'Bạn là {n} phải không?',my:'သင်သည် {n} ဟုတ်ပါသလား?',si:'ඔබ {n} ද?'},
+yes:{ko:'네, 맞아요',en:"Yes, that's me",vi:'Đúng, là tôi',my:'ဟုတ်ကဲ့၊ ကျွန်ုပ်ပါ',si:'ඔව්, මම'},
+no:{ko:'아니요, 다시 고를게요',en:'No, choose again',vi:'Không, chọn lại',my:'မဟုတ်ပါ၊ ပြန်ရွေးမည်',si:'නැහැ, නැවත තෝරන්න'},
+armOut:{ko:'한 번 더 누르면 {t}로 바뀌어요',en:'Tap again to change to {t}',vi:'Bấm lần nữa để đổi thành {t}',my:'{t} သို့ ပြောင်းရန် ထပ်နှိပ်ပါ',si:'{t} ලෙස වෙනස් කිරීමට නැවත ඔබන්න'},
+armIn:{ko:'한 번 더 누르면 {t} 다시 출근',en:'Tap again to clock in at {t}',vi:'Bấm lần nữa để vào ca lúc {t}',my:'{t} တွင် ထပ်ဝင်ရန် ထပ်နှိပ်ပါ',si:'{t} ට නැවත පැමිණීමට ඔබන්න'},
+recording:{ko:'기록 중…',en:'Saving…',vi:'Đang ghi…',my:'မှတ်တမ်းတင်နေသည်…',si:'සටහන් කරමින්…'},
+already:{ko:'이미 {t}에 출근했어요',en:'Already clocked in at {t}',vi:'Đã vào ca lúc {t}',my:'{t} တွင် ဝင်ပြီးသား',si:'{t} ට දැනටමත් පැමිණ ඇත'},
+inOk:{ko:'✅ {t} 출근 기록됐어요',en:'✅ Clocked in at {t}',vi:'✅ Đã vào ca lúc {t}',my:'✅ {t} ဝင်ချိန် မှတ်ပြီး',si:'✅ {t} පැමිණීම සටහන් විය'},
+outOk:{ko:'✅ {t} 퇴근 기록됐어요',en:'✅ Clocked out at {t}',vi:'✅ Đã tan ca lúc {t}',my:'✅ {t} ဆင်းချိန် မှတ်ပြီး',si:'✅ {t} පිටවීම සටහන් විය'},
+fail:{ko:'기록 안 됐어요: {e} — 다시 눌러주세요',en:'Not saved: {e} — please tap again',vi:'Chưa ghi được: {e} — vui lòng bấm lại',my:'မှတ်တမ်း မတင်ရပါ: {e} — ထပ်နှိပ်ပါ',si:'සටහන් නොවීය: {e} — නැවත ඔබන්න'},
+ym:{ko:'{y}년 {m}월',en:'{m}/{y}',vi:'Tháng {m}/{y}',my:'{y} / {m}',si:'{y} / {m}'},
+workDays:{ko:'근무일',en:'Days',vi:'Số ngày',my:'အလုပ်ရက်',si:'වැඩ දින'},
+total:{ko:'합계',en:'Total',vi:'Tổng',my:'စုစုပေါင်း',si:'එකතුව'},
+days:{ko:'{n}일',en:'{n} days',vi:'{n} ngày',my:'{n} ရက်',si:'දින {n}'},
+hm:{ko:'{h}시간 {m}분',en:'{h}h {m}m',vi:'{h} giờ {m} phút',my:'{h} နာရီ {m} မိနစ်',si:'පැය {h} මිනිත්තු {m}'},
+hOnly:{ko:'{h}시간',en:'{h}h',vi:'{h} giờ',my:'{h} နာရီ',si:'පැය {h}'},
+noRec:{ko:'이 달 기록이 없어요',en:'No records this month',vi:'Không có dữ liệu tháng này',my:'ဒီလ မှတ်တမ်း မရှိပါ',si:'මෙම මාසයේ වාර්තා නැත'},
+thDate:{ko:'날짜',en:'Date',vi:'Ngày',my:'ရက်',si:'දිනය'},
+thIn:{ko:'출근',en:'In',vi:'Vào',my:'ဝင်',si:'පැමිණීම'},
+thOut:{ko:'퇴근',en:'Out',vi:'Ra',my:'ဆင်း',si:'පිටවීම'},
+thH:{ko:'근무',en:'Hours',vi:'Giờ',my:'နာရီ',si:'පැය'},
+rule:{ko:'출근은 정해진 시간보다 일찍 와도 정해진 시간부터,\n5분 안으로 늦으면 정해진 시간으로,\n퇴근은 5분 단위로 계산돼요',
+  en:'Arriving early counts from your start time,\nup to 5 minutes late counts as on time,\nclock-out is rounded down to 5 minutes',
+  vi:'Đến sớm vẫn tính từ giờ bắt đầu,\nmuộn dưới 5 phút tính như đúng giờ,\ngiờ ra làm tròn xuống theo 5 phút',
+  my:'စောရောက်လည်း သတ်မှတ်ချိန်မှ စတင်တွက်သည်၊\n၅ မိနစ်အတွင်း နောက်ကျလျှင် အချိန်မှန်အဖြစ် တွက်သည်၊\nဆင်းချိန်ကို ၅ မိနစ်ယူနစ်ဖြင့် တွက်သည်',
+  si:'කලින් පැමිණියත් ආරම්භ වේලාවේ සිට ගණන් කෙරේ,\nමිනිත්තු 5ක් දක්වා ප්‍රමාදය නියමිත වේලාව ලෙස සැලකේ,\nපිටවීම මිනිත්තු 5 අනුව ගණන් කෙරේ'},
+help:{ko:'❓ 사용법',en:'❓ How to use',vi:'❓ Hướng dẫn sử dụng',my:'❓ အသုံးပြုနည်း',si:'❓ භාවිතා කරන ආකාරය'},
+helpSub:{ko:'출퇴근 찍는 방법',en:'How to clock in and out',vi:'Cách chấm công vào và ra',my:'အလုပ်ဝင်/ဆင်း မှတ်နည်း',si:'පැමිණීම සහ පිටවීම සටහන් කරන ආකාරය'},
+helpSteps:{
+  ko:['세척장에 도착하면 QR을 찍고 [출근하기]를 눌러요','일이 끝나면 다시 QR을 찍고 [퇴근하기]를 눌러요','처음 한 번만 내 이름을 골라요. 이 폰이 기억해요','위치(GPS)는 항상 켜 두세요. 꺼져 있으면 정상 기록이 안 돼요','꼭 내 폰으로 찍어요. 다른 사람 폰으로 찍으면 안 돼요','시간이 틀렸거나 못 찍었으면 [기록이 잘못됐어요]에서 맞는 시간을 보내요. 대표님이 승인하면 고쳐져요','[이번 달 내 근무시간]에서 날짜별 시간과 합계를 볼 수 있어요','화면 위 🌐 버튼으로 언어를 바꿀 수 있어요'],
+  en:['When you arrive, scan the QR and tap [Clock in]','When you finish, scan the QR again and tap [Clock out]','Choose your name only the first time. This phone will remember it','Always keep Location (GPS) on. Without it, your time may not be recorded correctly','Always use your own phone. Do not use someone else\'s phone','If a time is wrong or you forgot, use [My record is wrong] and send the correct time. It is fixed after the manager approves','See your daily times and total in [My hours this month]','Change the language with the 🌐 button at the top'],
+  vi:['Khi đến nơi làm, quét mã QR và bấm [Vào ca]','Khi xong việc, quét mã QR lần nữa và bấm [Tan ca]','Chỉ chọn tên của bạn lần đầu tiên. Điện thoại sẽ nhớ','Luôn bật Vị trí (GPS). Nếu tắt, giờ có thể không được ghi đúng','Luôn dùng điện thoại của chính bạn. Không dùng điện thoại người khác','Nếu giờ bị sai hoặc quên bấm, vào [Giờ chấm công bị sai] và gửi giờ đúng. Quản lý duyệt xong sẽ được sửa','Xem giờ từng ngày và tổng cộng trong [Giờ làm tháng này]','Đổi ngôn ngữ bằng nút 🌐 ở phía trên'],
+  my:['အလုပ်နေရာ ရောက်လျှင် QR ကို စကန်ဖတ်ပြီး [အလုပ်ဝင်] ကို နှိပ်ပါ','အလုပ်ပြီးလျှင် QR ကို ထပ်စကန်ဖတ်ပြီး [အလုပ်ဆင်း] ကို နှိပ်ပါ','ပထမအကြိမ်သာ သင့်နာမည်ကို ရွေးပါ။ ဤဖုန်းက မှတ်ထားမည်','တည်နေရာ (GPS) ကို အမြဲ ဖွင့်ထားပါ။ ပိတ်ထားလျှင် အချိန် မှန်ကန်စွာ မှတ်တမ်းမတင်နိုင်ပါ','ကိုယ့်ဖုန်းဖြင့်သာ နှိပ်ပါ။ အခြားသူ၏ ဖုန်းကို မသုံးပါနှင့်','အချိန် မှားလျှင် သို့မဟုတ် မနှိပ်မိလျှင် [မှတ်တမ်း မှားနေသည်] တွင် မှန်ကန်သော အချိန်ကို ပို့ပါ။ မန်နေဂျာ အတည်ပြုပြီးနောက် ပြင်ပေးမည်','[ဒီလ ကျွန်ုပ်၏ အလုပ်ချိန်] တွင် နေ့အလိုက် အချိန်နှင့် စုစုပေါင်း ကြည့်နိုင်သည်','အပေါ်ရှိ 🌐 ခလုတ်ဖြင့် ဘာသာစကား ပြောင်းနိုင်သည်'],
+  si:['වැඩබිමට පැමිණි විට QR එක ස්කෑන් කර [වැඩට පැමිණීම] ඔබන්න','වැඩ අවසන් වූ විට නැවත QR එක ස්කෑන් කර [වැඩ අවසන්] ඔබන්න','පළමු වතාවට පමණක් ඔබේ නම තෝරන්න. මෙම දුරකථනය එය මතක තබා ගනී','ස්ථානය (GPS) සැමවිටම සක්‍රියව තබන්න. නැතිනම් ඔබේ වේලාව නිවැරදිව සටහන් නොවිය හැක','සැමවිටම ඔබේම දුරකථනය භාවිතා කරන්න. වෙනත් අයෙකුගේ දුරකථනය භාවිතා නොකරන්න','වේලාව වැරදි නම් හෝ අමතක වුණොත් [මගේ වාර්තාව වැරදියි] තුළින් නිවැරදි වේලාව යවන්න. කළමනාකරු අනුමත කළ පසු නිවැරදි වේ','[මෙම මාසයේ මගේ වැඩ කාලය] තුළ දිනපතා වේලාවන් සහ එකතුව බලන්න','ඉහළ ඇති 🌐 බොත්තමෙන් භාෂාව වෙනස් කරන්න']},
+back:{ko:'← 출퇴근 화면으로',en:'← Back',vi:'← Quay lại',my:'← နောက်သို့',si:'← ආපසු'},
+loadFail:{ko:'불러오지 못했어요',en:'Could not load',vi:'Không tải được',my:'ဖွင့်၍ မရပါ',si:'පූරණය කළ නොහැක'},
+loadHint:{ko:'인터넷 연결을 확인하고 새로고침 해주세요',en:'Check your internet and refresh',vi:'Kiểm tra mạng và tải lại trang',my:'အင်တာနက် စစ်ပြီး ပြန်ဖွင့်ပါ',si:'අන්තර්ජාලය පරීක්ෂා කර නැවත පූරණය කරන්න'}
+};
+var WD = {ko:'일월화수목금토'.split(''), en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], vi:['CN','T2','T3','T4','T5','T6','T7'],
+  my:['နွေ','လာ','ဂါ','ဟူး','တေး','ကြာ','နေ'], si:['ඉරි','සඳු','අඟ','බදා','බ්‍රහ','සිකු','සෙන']};
+var WDL = {ko:['일요일','월요일','화요일','수요일','목요일','금요일','토요일'], en:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  vi:['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'],
+  my:['တနင်္ဂနွေ','တနင်္လာ','အင်္ဂါ','ဗုဒ္ဓဟူး','ကြာသပတေး','သောကြာ','စနေ'], si:['ඉරිදා','සඳුදා','අඟහරුවාදා','බදාදා','බ්‍රහස්පතින්දා','සිකුරාදා','සෙනසුරාදා']};
+function pickLang() { return Q.get('lang') || store.get('lang') || NAME_LANG[me] || 'ko'; }
+var L = pickLang();
+function T(k, a) {
+  var s = (TX[k] && (TX[k][L] || TX[k].ko)) || k;
+  if (a) Object.keys(a).forEach(function(x) { s = s.split('{' + x + '}').join(a[x]); });
+  return s;
+}
+(function() {
+  var sel = document.getElementById('lang');
+  LANGS.forEach(function(x) { var o = document.createElement('option'); o.value = x[0]; o.textContent = '🌐 ' + x[1]; sel.appendChild(o); });
+  sel.value = L;
+  sel.onchange = function() { L = sel.value; store.set('lang', L); document.documentElement.lang = L; render(); };
+  document.documentElement.lang = L;
+})();
+
 function locate() {
-  if (!navigator.geolocation) { posErr = '이 폰은 위치 기능이 없어요'; return; }
-  navigator.geolocation.getCurrentPosition(function(p) { pos = p.coords; },
-    function(e) { posErr = e.code === 1 ? '위치 권한이 꺼져 있어요' : '위치를 못 찾았어요'; },
+  posErr = '';
+  if (!navigator.geolocation) { posErr = 'noGeo'; return; }
+  navigator.geolocation.getCurrentPosition(function(p) { pos = p.coords; posErr = ''; },
+    function(e) { posErr = e.code === 1 ? 'denied' : 'notFound'; },
     {enableHighAccuracy: true, timeout: 15000, maximumAge: 60000});
 }
 function waitPos(ms) {
@@ -104,57 +234,83 @@ function call(params) {
   return fetch(D.url + '?' + q).then(function(r) { return r.json(); });
 }
 function h(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-function today() { var d = new Date(); return (d.getMonth()+1) + '월 ' + d.getDate() + '일 ' + '일월화수목금토'[d.getDay()] + '요일'; }
+function today() {
+  var d = new Date(), M = d.getMonth() + 1, Dd = d.getDate(), w = WDL[L][d.getDay()];
+  if (L === 'ko') return M + '월 ' + Dd + '일 ' + w;
+  if (L === 'en') return w + ', ' + M + '/' + Dd;
+  return w + ' · ' + Dd + '/' + M;
+}
 function hhmm() { var d = new Date(); return ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2); }
 function avatar(name, i) { var a = h('span', 'av', name.length > 2 ? name.slice(-2) : name); a.style.background = COLORS[i % COLORS.length]; return a; }
 function visible() { return D.명단.filter(function(x) { return x.이름 !== '테스트' || D.test || me === '테스트'; }); }
 function clear() { if (clockTimer) clearInterval(clockTimer); clockTimer = null; var app = document.getElementById('app'); app.innerHTML = ''; return app; }
 function mine() { return D.명단.filter(function(x) { return x.이름 === me; })[0]; }
 
+// 위치가 꺼져 있으면 큰 안내 카드
+function gpsCard(app) {
+  if (!posErr) return;
+  var g = h('div', 'gps');
+  g.appendChild(h('b', '', T('gpsTitle')));
+  g.appendChild(h('p', '', '(' + T(posErr) + ')\n' + T('gpsBody')));
+  var r = h('button', 'btn', T('gpsRetry'));
+  r.onclick = function() {
+    r.disabled = true; r.textContent = T('gpsFinding');
+    pos = null; locate();
+    waitPos(15000).then(function() { render(); });
+  };
+  g.appendChild(r);
+  app.appendChild(g);
+}
+
 function render(msg, cls) {
   var app = clear();
   if (D.setup) return renderSetup(app);
   var w = mine();
   if (!w) return renderPick(app);
+  gpsCard(app);
   var c = h('div', 'card');
-  c.appendChild(h('div', 'hello', '안녕하세요'));
-  c.appendChild(h('div', 'who', w.이름 + ' 님'));
+  c.appendChild(h('div', 'hello', T('hello')));
+  c.appendChild(h('div', 'who', T('nim', {n: w.이름})));
   c.appendChild(h('div', 'date', today()));
   var clock = h('div', 'clock', hhmm()); c.appendChild(clock);
   clockTimer = setInterval(function() { clock.textContent = hhmm(); }, 5000);
-  var b;
-  if (!w.출근) { b = h('button', 'btn b-in', '출근하기'); b.onclick = function() { press('in', b); }; }
-  else if (!w.퇴근) { b = h('button', 'btn b-out', '퇴근하기'); b.onclick = function() { press('out', b); }; }
+  var b, again;
+  if (!w.출근) { b = h('button', 'btn b-in', T('in')); b.onclick = function() { press('in', b); }; }
+  else if (!w.퇴근) { b = h('button', 'btn b-out', T('out')); b.onclick = function() { press('out', b); }; }
   else {  // 퇴근까지 찍은 뒤: 오후에 다시 나오면 한 번 더 출근, 잘못 찍었으면 퇴근 다시
-    b = h('button', 'btn b-done', '오늘 수고하셨어요 · 퇴근 다시 찍기'); b.onclick = function() { press('out', b); };
-    var again = h('button', 'btn b-ghost', '다시 출근하기 (하루 두 번 근무)'); again.onclick = function() { press('in', again); };
+    b = h('button', 'btn b-done', T('done')); b.onclick = function() { press('out', b); };
+    again = h('button', 'btn b-ghost', T('again')); again.onclick = function() { press('in', again); };
   }
   c.appendChild(b);
   if (again) c.appendChild(again);
   var m = h('div', 'msg ' + (cls || ''), msg || ''); m.id = 'msg'; c.appendChild(m);
   app.appendChild(c);
 
-  if (posErr) app.appendChild(h('div', 'warn', '📍 ' + posErr + ' — 위치를 켜야 정상 기록돼요'));
-
   var s = h('div', 'card'), t = h('div', 'today');
-  [['출근', w.출근], ['퇴근', w.퇴근]].forEach(function(x) {
-    var d = h('div', x[1] ? 'on' : ''); d.appendChild(h('span', '', '오늘 ' + x[0])); d.appendChild(h('b', '', x[1] || '--:--')); t.appendChild(d);
+  [['todayIn', w.출근], ['todayOut', w.퇴근]].forEach(function(x) {
+    var d = h('div', x[1] ? 'on' : ''); d.appendChild(h('span', '', T(x[0]))); d.appendChild(h('b', '', x[1] || '--:--')); t.appendChild(d);
   });
   s.appendChild(t); app.appendChild(s);
 
   var mm = h('a', 'menu'); mm.href = '#';
-  var l = h('div'); l.appendChild(document.createTextNode('📋 이번 달 내 근무시간')); l.appendChild(h('small', '', '날짜별 출퇴근과 합계를 볼 수 있어요'));
+  var l = h('div'); l.appendChild(document.createTextNode(T('mine'))); l.appendChild(h('small', '', T('mineSub')));
   mm.appendChild(l); mm.appendChild(h('em', '', '›'));
   mm.onclick = function(e) { e.preventDefault(); renderMine(); };
   app.appendChild(mm);
 
   var f = h('a', 'menu'); f.href = '#';
-  var fl = h('div'); fl.appendChild(document.createTextNode('✏️ 기록이 잘못됐어요')); fl.appendChild(h('small', '', '시간이 틀렸거나 못 찍었으면 수정 요청'));
+  var fl = h('div'); fl.appendChild(document.createTextNode(T('fix'))); fl.appendChild(h('small', '', T('fixSub')));
   f.appendChild(fl); f.appendChild(h('em', '', '›'));
   f.onclick = function(e) { e.preventDefault(); renderFix(''); };
   app.appendChild(f);
 
-  var a = h('a', 'link', '내 이름이 아니에요'); a.href = '#';
+  var hp = h('a', 'menu'); hp.href = '#';
+  var hl = h('div'); hl.appendChild(document.createTextNode(T('help'))); hl.appendChild(h('small', '', T('helpSub')));
+  hp.appendChild(hl); hp.appendChild(h('em', '', '›'));
+  hp.onclick = function(e) { e.preventDefault(); renderHelp(); };
+  app.appendChild(hp);
+
+  var a = h('a', 'link', T('notMe')); a.href = '#';
   // 남의 이름으로 이미 찍었으면 수정 요청부터 보내고 이름을 다시 고른다
   a.onclick = function(e) { e.preventDefault(); if (w.출근 || w.퇴근) renderFix(WRONG); else forget(); };
   app.appendChild(a);
@@ -162,52 +318,85 @@ function render(msg, cls) {
 
 function forget() { store.del('name_' + D.site); me = null; render(); }
 
+function renderHelp() {
+  var app = clear(), c = h('div', 'card');
+  c.appendChild(h('div', 'who', T('help')));
+  var ol = h('ol', 'steps');
+  (TX.helpSteps[L] || TX.helpSteps.ko).forEach(function(s) { ol.appendChild(h('li', '', s)); });
+  c.appendChild(ol); app.appendChild(c);
+  var back = h('a', 'link', T('back')); back.href = '#';
+  back.onclick = function(e) { e.preventDefault(); render(); };
+  app.appendChild(back);
+}
+
+// 서버로는 한국어 값(KINDS)을 보내고, 화면에는 번역(k0~k3)을 보여준다
 var WRONG = '다른 사람 이름으로 찍었어요';
 var KINDS = [WRONG, '출근·퇴근 시간이 틀려요', '출근이나 퇴근을 못 찍었어요', '기타'];
 function ymd(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
 
 function renderFix(kind) {
-  var app = clear(), c = h('div', 'card');
-  c.appendChild(h('div', 'hello', me + ' 님 기록'));
-  c.appendChild(h('div', 'who', '수정 요청'));
-  if (kind === WRONG) c.appendChild(h('div', 'warn', '오늘 ' + me + ' 님 이름으로 찍은 기록이 있어요.\n대표님께 고쳐 달라고 요청한 뒤 내 이름을 다시 골라요.'));
+  var app = clear(), c = h('div', 'card'), w = mine() || {};
+  c.appendChild(h('div', 'hello', T('fixOf', {n: me})));
+  c.appendChild(h('div', 'who', T('fixTitle')));
+  if (kind === WRONG) c.appendChild(h('div', 'warn', T('wrongWarn', {n: me})));
   var date = h('input', 'field'); date.type = 'date'; date.value = ymd(new Date()); date.max = date.value;
-  c.appendChild(h('div', 'label', '날짜')); c.appendChild(date);
-  c.appendChild(h('div', 'label', '무엇이 잘못됐나요?'));
+  c.appendChild(h('div', 'label', T('date'))); c.appendChild(date);
+  c.appendChild(h('div', 'label', T('what')));
   var picked = kind, opts = h('div', 'opts');
-  KINDS.forEach(function(k) {
-    var o = h('button', 'opt' + (k === picked ? ' on' : ''), k);
-    o.onclick = function() { picked = k; [].forEach.call(opts.children, function(x) { x.className = 'opt' + (x === o ? ' on' : ''); }); };
+
+  // 맞는 시간 (다른 사람 이름 고른 경우엔 숨김)
+  var tb = h('div'), tIn = h('input', 'field'), tOut = h('input', 'field'), now = h('div', 'now');
+  tIn.type = 'time'; tOut.type = 'time';
+  tb.appendChild(h('div', 'label', T('times')));
+  var tg = h('div', 'times'), a1 = h('label'), a2 = h('label');
+  a1.appendChild(h('span', '', T('tIn'))); a1.appendChild(tIn);
+  a2.appendChild(h('span', '', T('tOut'))); a2.appendChild(tOut);
+  tg.appendChild(a1); tg.appendChild(a2); tb.appendChild(tg); tb.appendChild(now);
+  tb.appendChild(h('div', 'now', T('timesHint')));
+  function showNow() {
+    now.textContent = date.value === ymd(new Date()) ? T('nowRec', {a: w.출근 || '-', b: w.퇴근 || '-'}) : '';
+  }
+  date.onchange = showNow; showNow();
+  function showTimes() { tb.style.display = picked === WRONG ? 'none' : ''; }
+
+  KINDS.forEach(function(k, i) {
+    var o = h('button', 'opt' + (k === picked ? ' on' : ''), T('k' + i));
+    o.onclick = function() { picked = k; [].forEach.call(opts.children, function(x) { x.className = 'opt' + (x === o ? ' on' : ''); }); showTimes(); };
     opts.appendChild(o);
   });
   c.appendChild(opts);
+  c.appendChild(tb); showTimes();
   var memo = h('textarea', 'field'); memo.rows = 3;
-  memo.placeholder = kind === WRONG ? '제 이름은 ○○○이에요' : '예: 실제 출근은 9:20이었어요';
-  c.appendChild(h('div', 'label', '자세히 (선택)')); c.appendChild(memo);
-  var send = h('button', 'btn b-in', '요청 보내기'), m = h('div', 'msg');
+  memo.placeholder = kind === WRONG ? T('memoPhWrong') : T('memoPh');
+  c.appendChild(h('div', 'label', T('memo'))); c.appendChild(memo);
+  var send = h('button', 'btn b-in', T('send')), m = h('div', 'msg');
   send.onclick = function() {
-    if (!picked) { m.className = 'msg err'; m.textContent = '무엇이 잘못됐는지 골라주세요'; return; }
-    send.disabled = true; send.textContent = '보내는 중…';
-    call({do: 'fix', name: me, date: date.value, kind: picked, memo: memo.value}).then(function(r) {
-      if (!r.ok) throw new Error(r.오류 || '실패');
+    if (!picked) { m.className = 'msg err'; m.textContent = T('pickKind'); return; }
+    var needs = picked === KINDS[1] || picked === KINDS[2];
+    if (needs && !tIn.value && !tOut.value) { m.className = 'msg err'; m.textContent = T('needTime'); return; }
+    send.disabled = true; send.textContent = T('sending');
+    var body = {do: 'fix', name: me, date: date.value, kind: picked, memo: memo.value};
+    if (picked !== WRONG) { if (tIn.value) body.in = tIn.value; if (tOut.value) body.out = tOut.value; }
+    call(body).then(function(r) {
+      if (!r.ok) throw new Error(r.오류 || 'fail');
       if (picked === WRONG) { store.del('name_' + D.site); me = null; }
       var app2 = clear(), d = h('div', 'card');
-      d.appendChild(h('div', 'who', '요청을 보냈어요 ✅'));
-      d.appendChild(h('div', 'hello', '대표님이 확인하고 고쳐 드려요'));
-      var ok = h('button', 'btn b-ghost', me ? '출퇴근 화면으로' : '내 이름 고르기'); ok.onclick = function() { render(); };
+      d.appendChild(h('div', 'who', T('sent')));
+      d.appendChild(h('div', 'hello', T('sentSub')));
+      var ok = h('button', 'btn b-ghost', me ? T('toMain') : T('pickName')); ok.onclick = function() { render(); };
       d.appendChild(ok); app2.appendChild(d);
-    }).catch(function(e) { send.disabled = false; send.textContent = '요청 보내기'; m.className = 'msg err'; m.textContent = '못 보냈어요: ' + e.message; });
+    }).catch(function(e) { send.disabled = false; send.textContent = T('send'); m.className = 'msg err'; m.textContent = T('sendFail') + e.message; });
   };
   c.appendChild(send); c.appendChild(m); app.appendChild(c);
-  var back = h('a', 'link', '← 취소'); back.href = '#';
+  var back = h('a', 'link', T('cancel')); back.href = '#';
   back.onclick = function(e) { e.preventDefault(); render(); };
   app.appendChild(back);
 }
 
 function renderPick(app) {
   var c = h('div', 'card');
-  c.appendChild(h('div', 'who', '이름을 골라주세요'));
-  c.appendChild(h('div', 'hello', '처음 한 번만 고르면 이 폰이 기억해요'));
+  c.appendChild(h('div', 'who', T('pick')));
+  c.appendChild(h('div', 'hello', T('pickSub')));
   var g = h('div', 'names');
   visible().forEach(function(w, i) {
     var b = h('button', 'name'); b.appendChild(avatar(w.이름, i)); b.appendChild(document.createTextNode(w.이름));
@@ -219,68 +408,70 @@ function renderPick(app) {
 
 function askName(n) {  // 확인창(confirm)은 막혀 있을 수 있어서 화면으로 묻는다
   var app = clear();
+  if (!store.get('lang') && !Q.get('lang') && NAME_LANG[n]) { L = NAME_LANG[n]; document.getElementById('lang').value = L; }
   var c = h('div', 'card');
-  c.appendChild(h('div', 'hello', '확인해 주세요'));
-  c.appendChild(h('div', 'who', n + ' 님이 맞나요?'));
-  var y = h('button', 'btn b-in', '네, 맞아요');
+  c.appendChild(h('div', 'hello', T('confirm')));
+  c.appendChild(h('div', 'who', T('isYou', {n: n})));
+  var y = h('button', 'btn b-in', T('yes'));
   y.onclick = function() { me = n; store.set('name_' + D.site, me); render(); };
-  var no = h('button', 'btn b-ghost', '아니요, 다시 고를게요');
-  no.onclick = function() { render(); };
+  var no = h('button', 'btn b-ghost', T('no'));
+  no.onclick = function() { if (!store.get('lang') && !Q.get('lang')) { L = 'ko'; document.getElementById('lang').value = L; } render(); };
   c.appendChild(y); c.appendChild(no); app.appendChild(c);
 }
 
 function press(kind, b) {
   var w = mine();
-  if (kind === 'out' && w.퇴근 && !b.armed) { b.armed = true; b.className = 'btn b-out'; b.textContent = '한 번 더 누르면 ' + hhmm() + '로 바뀌어요'; return; }
-  if (kind === 'in' && w.퇴근 && !b.armed) { b.armed = true; b.className = 'btn b-in'; b.textContent = '한 번 더 누르면 ' + hhmm() + ' 다시 출근'; return; }
-  b.disabled = true; b.textContent = '기록 중…';
+  if (kind === 'out' && w.퇴근 && !b.armed) { b.armed = true; b.className = 'btn b-out'; b.textContent = T('armOut', {t: hhmm()}); return; }
+  if (kind === 'in' && w.퇴근 && !b.armed) { b.armed = true; b.className = 'btn b-in'; b.textContent = T('armIn', {t: hhmm()}); return; }
+  b.disabled = true; b.textContent = T('recording');
+  if (!pos) { posErr = ''; locate(); }
   waitPos(8000).then(function() { return call({do: kind, name: me}); }).then(function(r) {
-    if (!r.ok) throw new Error(r.오류 || '실패');
+    if (!r.ok) throw new Error(r.오류 || 'fail');
     w.출근 = r.출근; w.퇴근 = r.퇴근;
-    render(r.이미 ? '이미 ' + r.출근 + '에 출근했어요' : (kind === 'in' ? '✅ ' + r.출근 + ' 출근 기록됐어요' : '✅ ' + r.퇴근 + ' 퇴근 기록됐어요'), 'ok');
+    render(r.이미 ? T('already', {t: r.출근}) : (kind === 'in' ? T('inOk', {t: r.출근}) : T('outOk', {t: r.퇴근})), 'ok');
   }).catch(function(e) {
-    b.disabled = false; b.armed = false; b.textContent = kind === 'in' ? '출근하기' : '퇴근하기';
-    var m = document.getElementById('msg'); m.className = 'msg err'; m.textContent = '기록 안 됐어요: ' + e.message + ' — 다시 눌러주세요';
+    b.disabled = false; b.armed = false; b.textContent = kind === 'in' ? T('in') : T('out');
+    var m = document.getElementById('msg'); m.className = 'msg err'; m.textContent = T('fail', {e: e.message});
   });
 }
 
 var ym = (function() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2); })();
 function shiftYm(n) { var y = +ym.slice(0, 4), m = +ym.slice(5) + n; while (m < 1) { m += 12; y--; } while (m > 12) { m -= 12; y++; } ym = y + '-' + ('0' + m).slice(-2); }
-function hm2(s) { var p = String(s).split(':'); return +p[0] + '시간' + (+p[1] ? ' ' + +p[1] + '분' : ''); }
+function hm2(s) { var p = String(s).split(':'); return +p[1] ? T('hm', {h: +p[0], m: +p[1]}) : T('hOnly', {h: +p[0]}); }
 
 function renderMine() {
   if (!me) return render();
   var app = clear();
   var c = h('div', 'card');
-  c.appendChild(h('div', 'hello', me + ' 님'));
+  c.appendChild(h('div', 'hello', T('nim', {n: me})));
   var nav = h('div', 'nav'); nav.style.marginTop = '8px';
   var prev = h('button', '', '‹'), next = h('button', '', '›');
   prev.onclick = function() { shiftYm(-1); renderMine(); };
   next.onclick = function() { shiftYm(1); renderMine(); };
-  nav.appendChild(prev); nav.appendChild(h('div', 't', ym.slice(0, 4) + '년 ' + +ym.slice(5) + '월')); nav.appendChild(next);
+  nav.appendChild(prev); nav.appendChild(h('div', 't', T('ym', {y: ym.slice(0, 4), m: +ym.slice(5)}))); nav.appendChild(next);
   c.appendChild(nav);
   var body = h('div'); body.appendChild(h('div', 'spin')); c.appendChild(body);
   app.appendChild(c);
-  var back = h('a', 'link', '← 출퇴근 화면으로'); back.href = '#';
+  var back = h('a', 'link', T('back')); back.href = '#';
   back.onclick = function(e) { e.preventDefault(); render(); };
   app.appendChild(back);
 
   var want = ym;
   call({do: 'mine', name: me, ym: ym}).then(function(r) {
     if (want !== ym) return;
-    if (!r.ok) throw new Error(r.오류 || '실패');
+    if (!r.ok) throw new Error(r.오류 || 'fail');
     body.innerHTML = '';
     var sum = h('div', 'sum');
-    [['근무일', r.일수 + '일'], ['합계', hm2(r.합계)]].forEach(function(x) { var d = h('div'); d.appendChild(h('span', '', x[0])); d.appendChild(h('b', '', x[1])); sum.appendChild(d); });
+    [[T('workDays'), T('days', {n: r.일수})], [T('total'), hm2(r.합계)]].forEach(function(x) { var d = h('div'); d.appendChild(h('span', '', x[0])); d.appendChild(h('b', '', x[1])); sum.appendChild(d); });
     body.appendChild(sum);
-    if (!r.목록.length) { body.appendChild(h('div', 'hint', '이 달 기록이 없어요')); return; }
+    if (!r.목록.length) { body.appendChild(h('div', 'hint', T('noRec'))); return; }
     var t = h('table'), hd = h('tr');
-    ['날짜', '출근', '퇴근', '근무'].forEach(function(x) { hd.appendChild(h('th', '', x)); });
+    ['thDate', 'thIn', 'thOut', 'thH'].forEach(function(x) { hd.appendChild(h('th', '', T(x))); });
     t.appendChild(hd);
     r.목록.forEach(function(o) {
       var d = new Date(o.날짜 + 'T00:00:00'), tr = h('tr'), wd = d.getDay();
       var td = h('td', 'd', (d.getMonth() + 1) + '/' + d.getDate() + ' ');
-      td.appendChild(h('span', wd === 0 || wd === 6 ? 'we' : '', '일월화수목금토'[wd]));
+      td.appendChild(h('span', wd === 0 || wd === 6 ? 'we' : '', WD[L][wd]));
       tr.appendChild(td);
       tr.appendChild(h('td', o.출근 ? '' : 'miss', o.출근 || '-'));
       tr.appendChild(h('td', o.퇴근 ? '' : 'miss', o.퇴근 || '-'));
@@ -288,11 +479,11 @@ function renderMine() {
       t.appendChild(tr);
     });
     body.appendChild(t);
-    body.appendChild(h('div', 'hint', '출근은 정해진 시간보다 일찍 와도 정해진 시간부터,\n15분 안으로 늦으면 정해진 시간으로,\n퇴근은 5분 단위로 계산돼요'));
+    body.appendChild(h('div', 'hint', T('rule')));
   }).catch(function(e) { body.innerHTML = ''; body.appendChild(h('div', 'msg err', e.message)); });
 }
 
-function renderSetup(app) {
+function renderSetup(app) {  // 대표 전용 — 한국어만
   var c = h('div', 'card');
   c.appendChild(h('div', 'hello', '대표 전용'));
   c.appendChild(h('div', 'who', D.site + ' 위치 등록'));
@@ -302,7 +493,7 @@ function renderSetup(app) {
   b.onclick = function() {
     b.disabled = true; m.className = 'msg'; m.textContent = '위치 찾는 중…';
     waitPos(15000).then(function() {
-      if (!pos) throw new Error(posErr || '위치를 못 찾았어요');
+      if (!pos) throw new Error(posErr ? T(posErr) : '위치를 못 찾았어요');
       return call({do: 'setup', key: D.setup});
     }).then(function(r) { if (!r.ok) throw new Error(r.오류); m.className = 'msg ok'; m.textContent = '✅ 등록됐어요 (오차 ' + r.정확도 + 'm)'; })
       .catch(function(e) { b.disabled = false; m.className = 'msg err'; m.textContent = e.message; });
@@ -314,13 +505,15 @@ locate();
 if (D.setup) render();
 else {
   call({do: 'list'}).then(function(r) {
-    if (!r.ok) throw new Error(r.오류 || '실패');
+    if (!r.ok) throw new Error(r.오류 || 'fail');
     D.명단 = r.명단;
     if (Q.get('v') === 'mine' && mine()) renderMine(); else render();
+    // 위치 응답이 늦게 오면(권한 거부 등) 안내 카드를 보여주려고 한 번 더 그린다
+    waitPos(16000).then(function() { if (posErr && document.querySelector('.clock') && !document.querySelector('.gps')) render(); });
   }).catch(function(e) {
     var app = clear(), c = h('div', 'card');
-    c.appendChild(h('div', 'msg err', '불러오지 못했어요'));
-    c.appendChild(h('div', 'hint', e.message + ' — 인터넷 연결을 확인하고 새로고침 해주세요'));
+    c.appendChild(h('div', 'msg err', T('loadFail')));
+    c.appendChild(h('div', 'hint', e.message + ' — ' + T('loadHint')));
     app.appendChild(c);
   });
 }
