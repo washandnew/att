@@ -32,6 +32,10 @@
   .nums span { display:block; font-size:12px; color:var(--gray); }
   .nums b { font-size:20px; }
   .nums .pack b { color:var(--green); font-size:24px; }
+  .sum.two, .nums.two { grid-template-columns:repeat(2,1fr); }
+  .badge.ex { background:#6a1b9a; }
+  .exc { margin-top:8px; background:#f3e5f5; color:#4a148c; border-radius:8px; padding:8px 10px; font-size:14px; }
+  .exc b { font-size:18px; }
   .note { margin-top:8px; font-size:14px; background:#fff8e1; border-radius:8px; padding:6px 8px; }
   .chg { margin-top:6px; font-size:13px; color:var(--red); font-weight:600; }
   .msg { text-align:center; color:var(--gray); padding:30px 0; }
@@ -163,7 +167,7 @@ async function load() {
       const org = (r[0] || '').trim(); if (!org) return;
       if (!map.has(org)) map.set(org, { name: org, classes: [] });
       map.get(org).classes.push({
-        cls: (r[1] || '').trim(), kids: num(r[2]), teacher: num(r[3]), pack: num(r[4]),
+        cls: (r[1] || '').trim(), kids: num(r[2]), teacher: num(r[3]), pack: num(r[4]), packRaw: String(r[4] || ''),
         memo: (r[5] || '').trim(), memoDate: (r[6] || '').trim(),
         changed: recent(r[7]), prev: num(r[8]), changedAt: (r[7] || '').trim()
       });
@@ -172,7 +176,15 @@ async function load() {
     orgs.forEach(o => {
       o.kids = o.classes.reduce((a, c) => a + (c.kids || 0), 0);
       o.teacher = o.classes.reduce((a, c) => a + (c.teacher || 0), 0);
-      o.pack = o.classes.reduce((a, c) => a + (c.pack != null ? c.pack : (c.kids || 0) + (c.teacher || 0)), 0);
+      // 포장 수량은 시트에 따로 적힌 반(예외)만 표시 — 나머지는 원아수(자동이체 등록 수) 그대로
+      // 시트에 '+2개'처럼 적으면 원아수 + 2 (원아수가 바뀌어도 항상 2개 추가), 숫자만 적으면 그 수량
+      // (원아수와 같은 값이 적혀 있으면 예외 아님)
+      o.classes.forEach(c => {
+        const m = /^\s*\+\s*(\d+)/.exec(c.packRaw);
+        if (m) c.pack = (c.kids || 0) + Number(m[1]);
+        if (c.pack != null && c.pack === c.kids) c.pack = null;
+      });
+      o.exc = o.classes.filter(c => c.pack != null).length;
       o.changed = o.classes.some(c => c.changed);
     });
     document.getElementById('meta').textContent = orgs.length + '개 기관 · 마지막 갱신 ' + (updated || '-');
@@ -192,7 +204,7 @@ function showList() {
     ? '<div class="list">' + list.map(o =>
         '<div class="org' + (o.changed ? ' changed' : '') + '" data-org="' + esc(o.name) + '"><span>' + esc(o.name) +
         (todayOrgs.has(o.name) ? '<span class="badge nt">전달</span>' : '') +
-        (o.changed ? '<span class="badge">변경</span>' : '') + '</span><small>포장 ' + o.pack + '개</small></div>').join('') + '</div>'
+        (o.changed ? '<span class="badge">변경</span>' : '') + (o.exc ? '<span class="badge ex">예외</span>' : '') + '</span><small>원아 ' + o.kids + ' · 교사 ' + o.teacher + '</small></div>').join('') + '</div>'
     : '<div class="msg">검색 결과가 없어요.</div>');
   document.querySelectorAll('.org').forEach(el => el.onclick = () => {
     listScroll = window.scrollY;
@@ -208,11 +220,11 @@ function showOrg(name) {
   let h = '<button class="back" id="back">← 기관 목록</button>';
   h += '<div class="title">' + esc(o.name) + '</div>';
   h += noticeHTML(o.name);
-  h += '<div class="sum"><div><b>' + o.kids + '</b><span>원아수</span></div><div><b>' + o.teacher + '</b><span>교사용식판</span></div><div><b>' + o.pack + '</b><span>포장 수량</span></div></div>';
+  h += '<div class="sum two"><div><b>' + o.kids + '</b><span>원아수</span></div><div><b>' + o.teacher + '</b><span>교사용식판</span></div></div>';
   o.classes.forEach(c => {
-    const pack = c.pack != null ? c.pack : (c.kids || 0) + (c.teacher || 0);
-    h += '<div class="cls' + (c.changed ? ' changed' : '') + '"><div class="name">' + esc(c.cls || '(반 구분 없음)') + '</div>';
-    h += '<div class="nums"><div><span>원아수</span><b>' + (c.kids ?? '-') + '</b></div><div><span>교사용</span><b>' + (c.teacher ?? '-') + '</b></div><div class="pack"><span>포장</span><b>' + pack + '</b></div></div>';
+    h += '<div class="cls' + (c.changed ? ' changed' : '') + '"><div class="name">' + esc(c.cls || '(반 구분 없음)') + (c.pack != null ? '<span class="badge ex">예외</span>' : '') + '</div>';
+    h += '<div class="nums two"><div><span>원아수</span><b>' + (c.kids ?? '-') + '</b></div><div><span>교사용</span><b>' + (c.teacher ?? '-') + '</b></div></div>';
+    if (c.pack != null) h += '<div class="exc">⚠️ 따로 정한 수량: 원아수 ' + (c.kids || 0) + ' ' + ((c.pack - (c.kids || 0)) >= 0 ? '+' : '') + (c.pack - (c.kids || 0)) + ' → 포장 <b>' + c.pack + '</b>개</div>';
     if (c.changed) h += '<div class="chg">원아수 변경: ' + (c.prev ?? '?') + ' → ' + (c.kids ?? '?') + ' (' + esc(c.changedAt) + ')</div>';
     if (c.memo) h += '<div class="note">메모: ' + esc(c.memo) + (c.memoDate ? ' <small>(' + esc(c.memoDate) + ')</small>' : '') + '</div>';
     h += '</div>';
