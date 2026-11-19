@@ -180,8 +180,14 @@ async function load() {
       // 시트에 '+2개'처럼 적으면 원아수 + 2 (원아수가 바뀌어도 항상 2개 추가), 숫자만 적으면 그 수량
       // (원아수와 같은 값이 적혀 있으면 예외 아님)
       o.classes.forEach(c => {
+        // '+1개 ~2027-02' = 2027년 2월 말까지만 추가, 그 뒤엔 자동으로 원래대로
+        const until = /~\s*(\d{4})-(\d{1,2})/.exec(c.packRaw);
+        const now = new Date();
+        const expired = until && (now.getFullYear() * 12 + now.getMonth() + 1) > (Number(until[1]) * 12 + Number(until[2]));
+        if (expired) c.pack = null;
+        else if (until) c.until = until[1].slice(2) + '년 ' + Number(until[2]) + '월까지';
         const m = /^\s*\+\s*(\d+)/.exec(c.packRaw);
-        if (m) c.pack = (c.kids || 0) + Number(m[1]);
+        if (m && !expired) c.pack = (c.kids || 0) + Number(m[1]);
         if (c.pack != null && c.pack === c.kids) c.pack = null;
       });
       o.exc = o.classes.filter(c => c.pack != null).length;
@@ -224,7 +230,7 @@ function showOrg(name) {
   o.classes.forEach(c => {
     h += '<div class="cls' + (c.changed ? ' changed' : '') + '"><div class="name">' + esc(c.cls || '(반 구분 없음)') + (c.pack != null ? '<span class="badge ex">예외</span>' : '') + '</div>';
     h += '<div class="nums two"><div><span>원아수</span><b>' + (c.kids ?? '-') + '</b></div><div><span>교사용</span><b>' + (c.teacher ?? '-') + '</b></div></div>';
-    if (c.pack != null) h += '<div class="exc">⚠️ 따로 정한 수량: 원아수 ' + (c.kids || 0) + ' ' + ((c.pack - (c.kids || 0)) >= 0 ? '+' : '') + (c.pack - (c.kids || 0)) + ' → 포장 <b>' + c.pack + '</b>개</div>';
+    if (c.pack != null) h += '<div class="exc">⚠️ 따로 정한 수량: 원아수 ' + (c.kids || 0) + ' ' + ((c.pack - (c.kids || 0)) >= 0 ? '+' : '') + (c.pack - (c.kids || 0)) + ' → 포장 <b>' + c.pack + '</b>개' + (c.until ? ' <small>(' + c.until + ')</small>' : '') + '</div>';
     if (c.changed) h += '<div class="chg">원아수 변경: ' + (c.prev ?? '?') + ' → ' + (c.kids ?? '?') + ' (' + esc(c.changedAt) + ')</div>';
     if (c.memo) h += '<div class="note">메모: ' + esc(c.memo) + (c.memoDate ? ' <small>(' + esc(c.memoDate) + ')</small>' : '') + '</div>';
     h += '</div>';
