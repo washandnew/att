@@ -65,7 +65,7 @@ th{color:var(--hint);font-weight:600;font-size:12px;text-align:right;padding:0 4
 td{text-align:right;padding:12px 4px;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left}
 tr:last-child td{border-bottom:0}
-td.d{color:var(--sub)}td.d .we{color:var(--red)}td.h{font-weight:800}td.miss{color:var(--hint)}
+td.d{color:var(--sub)}td.d .we{color:var(--red)}td.h{font-weight:800}td.miss{color:var(--hint)}td.d .st{display:block;font-size:11px;font-weight:700;white-space:nowrap}td.d .st.p{color:#B54708}td.d .st.y{color:var(--green)}td.d .st.n{color:var(--red)}
 .label{font-size:14px;font-weight:700;color:var(--sub);margin:18px 0 8px}
 .field{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:14px;padding:14px;font:inherit;font-size:17px;color:var(--ink);background:var(--card)}
 .times{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -172,6 +172,9 @@ total:{ko:'합계',en:'Total',vi:'Tổng',my:'စုစုပေါင်း',si
 days:{ko:'{n}일',en:'{n} days',vi:'{n} ngày',my:'{n} ရက်',si:'දින {n}'},
 hm:{ko:'{h}시간 {m}분',en:'{h}h {m}m',vi:'{h} giờ {m} phút',my:'{h} နာရီ {m} မိနစ်',si:'පැය {h} මිනිත්තු {m}'},
 hOnly:{ko:'{h}시간',en:'{h}h',vi:'{h} giờ',my:'{h} နာရီ',si:'පැය {h}'},
+stP:{ko:'⏳ 확인 중',en:'⏳ Pending',vi:'⏳ Đang chờ duyệt',my:'⏳ စစ်ဆေးနေသည်',si:'⏳ පරීක්ෂා කරමින්'},
+stY:{ko:'✅ 수정됨',en:'✅ Corrected',vi:'✅ Đã sửa',my:'✅ ပြင်ပြီး',si:'✅ නිවැරදි කළා'},
+stN:{ko:'❌ 반려',en:'❌ Rejected',vi:'❌ Bị từ chối',my:'❌ ငြင်းပယ်ခံရ',si:'❌ ප්‍රතික්ෂේපිතයි'},
 noRec:{ko:'이 달 기록이 없어요',en:'No records this month',vi:'Không có dữ liệu tháng này',my:'ဒီလ မှတ်တမ်း မရှိပါ',si:'මෙම මාසයේ වාර්තා නැත'},
 thDate:{ko:'날짜',en:'Date',vi:'Ngày',my:'ရက်',si:'දිනය'},
 thIn:{ko:'출근',en:'In',vi:'Vào',my:'ဝင်',si:'පැමිණීම'},
@@ -472,6 +475,8 @@ function renderMine() {
       var d = new Date(o.날짜 + 'T00:00:00'), tr = h('tr'), wd = d.getDay();
       var td = h('td', 'd', (d.getMonth() + 1) + '/' + d.getDate() + ' ');
       td.appendChild(h('span', wd === 0 || wd === 6 ? 'we' : '', WD[L][wd]));
+      var st = {'대기': ['p', 'stP'], '승인': ['y', 'stY'], '거절': ['n', 'stN']}[o.상태];
+      if (st) td.appendChild(h('span', 'st ' + st[0], T(st[1])));
       tr.appendChild(td);
       tr.appendChild(h('td', o.출근 ? '' : 'miss', o.출근 || '-'));
       tr.appendChild(h('td', o.퇴근 ? '' : 'miss', o.퇴근 || '-'));
